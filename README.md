@@ -1,5 +1,11 @@
 # dark-bmo
 
+<p align="center">
+  <img src="docs/img/bmo-capa.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo e botões coloridos" width="320">
+  <br>
+  <sub>Conceito visual do BMO v1.</sub>
+</p>
+
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
 > Baseado em ESP32-S3, com cara de BMO (Hora de Aventura). Jogos retrô + RF / NFC / IR.
 
@@ -206,7 +212,7 @@ LiPo - → B- ┘ → OUT → [chave SPST] → VIN do MT3608
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
 - **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`.
 - **Display**: driver ILI9341 (tela única).
-- **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` e `0x3C`.
+- **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
 
 ---
@@ -217,7 +223,7 @@ Um firmware por vez (como "cartuchos de software"):
 
 | Firmware | Uso |
 |---|---|
-| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Suporta ILI9341 e SH1106 |
+| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Suporta ILI9341 |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
 | **Modo agente** (futuro) | BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/telas. Só firmware, sem hardware novo |
@@ -254,7 +260,7 @@ referência visual.
   - **Card edge** (borda da PCB vira contato, estilo cartucho): o visual de cartucho de verdade.
     Depende de ter PCB (ver nota de PCB caseira abaixo). **Alvo do v1: card edge COMPLETO**,
     expondo I²C + SPI + UART + 3V3 + 5V + GND + 2 GPIO (~13 a 15 contatos). A confirmar com o
-    Tiago se a PCB no laser aguenta essa densidade com qualidade; se não, cai para o nível
+    Tiago Batista se a PCB no laser aguenta essa densidade com qualidade; se não, cai para o nível
     MÉDIO (I²C + UART + energia + 2 GPIO, ~9 a 10 contatos), que já cobre a maioria dos cartuchos.
     Proteção obrigatória: polyfuse na alimentação e CS dedicado para quem usar o SPI compartilhado.
   - Alternativa simples, se não quiser conector agora: barra de LEDs de status (power/RF/carga).
@@ -268,7 +274,7 @@ referência visual.
 
 ### PCB caseira (em avaliação)
 
-O colega **Tiago** faz **PCB caseira no laser** (grava a máscara e corrói o cobre, sem
+O colega **Tiago Batista** faz **PCB caseira no laser** (grava a máscara e corrói o cobre, sem
 depender de fábrica). Isso abre duas possibilidades para o BMO:
 
 - **Conector card edge** (cartucho de verdade) na faixa acima do D-pad vira viável já no v1,
@@ -296,10 +302,12 @@ os cartuchos possíveis:
 
 **Referências visuais (família de cartuchos):** dois conceitos, mesma carcaça teal e mesma
 borda de contatos dourados, mudando só etiqueta e antena:
-- Cartucho de jogo (etiqueta pixel art): `docs/img/cartucho-conceito.jpg`
-- Cartucho LoRa (etiqueta técnica + antena de mola): `docs/img/cartucho-lora-conceito.jpg`
 
-Servem de referência do card edge para a conversa com o Tiago e para o CAD. Decidir na PCB real
+| Cartucho de jogo (etiqueta pixel art) | Cartucho LoRa (etiqueta técnica + antena de mola) |
+|---|---|
+| ![Conceito do cartucho de jogo](docs/img/cartucho-conceito.jpg) | ![Conceito do cartucho LoRa](docs/img/cartucho-lora-conceito.jpg) |
+
+Servem de referência do card edge para a conversa com o Tiago Batista e para o CAD. Decidir na PCB real
 se os contatos ficam de um lado (single-side) ou dos dois lados (double-side, dobra os pinos no
 mesmo espaço).
 
@@ -328,8 +336,8 @@ O **card edge não vem pronto** em nenhum módulo. Um cartucho é montado de dua
 ```
 
 Ou seja: **cartucho completo = módulo da função + PCB-cartucho com card edge**. O conector
-fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. Por isso a PCB do Batista é
-essencial: o AliExpress dá o cérebro do rádio, o Batista dá o corpo do cartucho.
+fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. Por isso a PCB do Tiago Batista é
+essencial: o AliExpress dá o cérebro do rádio, o Tiago Batista dá o corpo do cartucho.
 
 ### Dimensões conhecidas
 | Peça | Medida |
@@ -362,7 +370,7 @@ essencial: o AliExpress dá o cérebro do rádio, o Batista dá o corpo do cartu
 - [ ] Áudio (speaker) + mic
 - [ ] Rosto animado na tela principal
 - [ ] Retro-Go rodando um jogo
-- [ ] Alinhar PCB caseira com o Tiago (card edge vs perfboard)
+- [ ] Alinhar PCB caseira com o Tiago Batista (card edge vs perfboard)
 - [ ] Modelar carcaça no CAD
 - [ ] Imprimir e montar
 - [ ] (Futuro) Modo agente via WiFi/BLE
