@@ -1,7 +1,7 @@
 # dark-bmo
 
 <p align="center">
-  <img src="docs/img/bmo-capa.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo, botões coloridos e o slot de cartucho (card edge) acima dos controles" width="640">
+  <img src="docs/img/bmo-capa-v1.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo, botões coloridos e o slot de cartucho (card edge) acima dos controles" width="640">
   <br>
   <sub>Conceito visual do BMO v1 (com o slot de cartucho card edge acima do D-pad).</sub>
 </p>
