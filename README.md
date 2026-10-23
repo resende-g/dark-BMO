@@ -60,7 +60,7 @@ soldar, entender barramentos e escrever firmware.
 ## Status
 
 **Planejado, parcialmente comprado, ainda não montado.** Fase atual: aguardar peças,
-montar na protoboard e começar o firmware.
+projetar a PCB (EasyEDA → JLCPCB) e começar o firmware.
 
 ---
 
@@ -69,7 +69,7 @@ montar na protoboard e começar o firmware.
 | Pessoa | Papel |
 |---|---|
 | **Resende** (Gabriel) | Lead do projeto: arquitetura, firmware, compras, documentação |
-| **Tiago Batista** | PCB caseira no laser (viabiliza o conector card edge e a migração perfboard → PCB) |
+| **Tiago Batista** | Consultor de hardware: ensina EasyEDA e orienta o projeto da PCB para fabricar na JLCPCB (carga/BMS/card edge integrados). Também faz PCB caseira no laser, mas a decisão foi fábrica |
 | **Tiago Efraim** | Impressão 3D da carcaça e montagem; monta um BMO em par (candidato ao cartucho LoRa p/ comunicação entre os dois) |
 
 São dois Tiagos distintos: **Batista** cuida da PCB; **Efraim** imprime e monta junto.
@@ -122,15 +122,14 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Módulo MicroSD SPI (mini 3,3V) | 1 | `Micro SD card module SPI` | variante mini |
 | Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | formatar FAT32 |
 | Bateria LiPo 3,7V 1S ~2000 mAh | 1 | `LiPo 3.7V 2000mAh 1S protection` | comprar por último, ~6 mm de espessura |
-| Carga + proteção USB-C | 1 | `TP4056 Type-C with protection DW01` | com saída OUT separada |
-| MT3608 boost ajustável | 1 | `MT3608 step up module` | regular 5,0V antes de ligar |
 | Botões tácteis 6×6 | vários | `tactile button 6x6 kit` | D-pad + ação (entrada do v1) |
 | Chave SPST slide mini | 1 | `SPST slide switch mini` | liga/desliga |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | pull-up I²C, divisor de bateria |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | desacoplamento |
-| Perfboard | 1-2 | `perfboard double side` | cortar no tamanho |
 | Jumpers Dupont (M-M e M-F) | kit | `Dupont jumper wire kit` | protoboard |
 | Fio fino 30 AWG | 1 | `30 AWG silicone wire` | fiação fina |
+
+**Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
 **Removido do v1**: teclado Rii i8, 2× MCP23017 e soquetes DIP (foram para o Projeto 2); **OLED 1,3" secundário** (sem o teclado, uma tela só já faz rosto + menu + status).
 
@@ -193,22 +192,22 @@ Cuidado com strapping: 3, 45, 46.
 
 ## Alimentação
 
+Todo o caminho de energia (carga da LiPo por USB-C, proteção/BMS de 1 célula e boost 5V)
+fica **desenhado na própria PCB** com componentes SMD, em vez de módulos avulsos. Fluxo lógico:
+
 ```
-LiPo + → B+ ┐ placa carga+proteção (USB-C carrega)
-LiPo - → B- ┘ → OUT → [chave SPST] → VIN do MT3608
-                       VOUT = 5,0V → pino 5V do ESP32 → regulador onboard → 3,3V
-3V3 → VCC dos módulos        MAX98357A → puxa 5V do MT3608
+USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [chave] → boost 5V (SMD)
+   → 5V para o ESP32 e MAX98357A → regulador onboard do ESP32 → 3,3V para os demais módulos
 ```
 
-- Regular o **MT3608 em 5,0V** com multímetro **antes** de ligar no ESP32.
-- A carga puxa pelo **OUT** da placa de proteção (senão a proteção de sobredescarga não atua).
-- Nunca expor a bateria crua.
+- Carga, proteção e boost são **CIs SMD na placa** (minúsculos, soldados de fábrica pela JLCPCB).
+- Projeto do circuito de energia no EasyEDA, com orientação do Tiago Batista.
+- Continua valendo: 5V para MAX98357A, 3,3V para o resto, nunca expor a bateria crua.
 
 ---
 
 ## Configurações críticas
 
-- **MT3608**: ajustar 5,0V antes de conectar.
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
 - **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`.
 - **Display**: driver ILI9341 (tela única).
@@ -255,37 +254,49 @@ referência visual.
 - Faixa horizontal acima do D-pad: **conector de expansão** (I²C + 3V3 + GND + GPIO livre),
   com polyfuse/resistor em série na alimentação (protege o ESP32 de curto no módulo plugado).
   No desenho do personagem essa faixa é o slot/leitor do BMO, então um conector ali é fiel.
-  - **Grove** ou **pin header**: funcionam em perfboard, prático. Grove dá acesso aos módulos
-    prontos da M5Stack.
-  - **Card edge** (borda da PCB vira contato, estilo cartucho): o visual de cartucho de verdade.
-    Depende de ter PCB (ver nota de PCB caseira abaixo). **Alvo do v1: card edge COMPLETO**,
-    expondo I²C + SPI + UART + 3V3 + 5V + GND + 2 GPIO (~13 a 15 contatos). A confirmar com o
-    Tiago Batista se a PCB no laser aguenta essa densidade com qualidade; se não, cai para o nível
-    MÉDIO (I²C + UART + energia + 2 GPIO, ~9 a 10 contatos), que já cobre a maioria dos cartuchos.
-    Proteção obrigatória: polyfuse na alimentação e CS dedicado para quem usar o SPI compartilhado.
-  - Alternativa simples, se não quiser conector agora: barra de LEDs de status (power/RF/carga).
-- Parafusos na **traseira** com **heat-set inserts** (não na frente).
+  - **Solução escolhida: card edge** (borda da PCB vira contato, estilo cartucho). Com a PCB
+    indo para a JLCPCB (fábrica), a densidade deixa de ser problema e o **card edge COMPLETO**
+    é viável: I²C + SPI + UART + 3V3 + 5V + GND + 2 GPIO (~13 a 15 contatos).
+  - **Conector fêmea primeiro:** o soquete que recebe o cartucho é definido antes do cartucho
+    (ele dita largura, nº de contatos e pitch). Opção de comprar soquete card edge pronto
+    (inclusive reaproveitar slot SD/RAM) ou desenhar na PCB. A definir no projeto EasyEDA.
+  - Proteção obrigatória: polyfuse na linha de alimentação do conector e CS dedicado no SPI.
+- **Traseira multifuncional (em duas zonas):**
+  - Zona de cima **fixa** (parafusada, segura a eletrônica).
+  - Zona de baixo é uma **tampa/porta** que abre e dá acesso a: **bateria**, **berços para
+    guardar os cartuchos reserva** (estojo; o cartucho ativo pluga no card edge em cima) e o
+    **slot do microSD**. O microSD fica DENTRO dessa zona, acessível só ao abrir a porta, nada
+    exposto por fora (troca é rara, não vale abertura permanente juntando poeira).
+  - **Fecho da tampa: 1 parafuso + lábio de encaixe no lado oposto** (sem dobradiça, sem ímã;
+    dobradiça viva racha e ímã foi descartado). O lábio enfia num rebaixo e o parafuso tranca o
+    outro lado.
+  - **Rosca do parafuso:** reaproveitar um **standoff hexagonal de metal** (daqueles de
+    placa-mãe, que Resende já tem) embutido num **furo hexagonal justo** no CAD, dando rosca
+    metálica de graça. Plano B se o standoff girar na prática: **heat-set insert** M2/M3.
+    Testar o encaixe hex num corpo de prova na impressão antes de fechar o design.
+- Demais parafusos de fechamento da carcaça também em **heat-set/standoff na traseira** (não na frente).
 - Ergonomia por chanfro/arredondamento das arestas inferiores, mantendo o corpo retangular.
 - Antena SMA no topo; antena do PN532 virada para fora sem metal atrás; LED + receptor IR na
   frente; grade do speaker no canto inferior; furo do mic no topo; 2× USB-C + chave numa
-  lateral; slot microSD na outra.
+  lateral. (O microSD não fica na lateral: fica dentro da porta traseira, ver acima.)
 - Detalhes mecânicos precisos (recorte de botões, heat-sets, bosses) saem do **CAD**
   (Fusion / Tinkercad / FreeCAD), não de gerador de imagem.
 
-### PCB caseira (em avaliação)
+### Fabricação: EasyEDA + JLCPCB (decidido)
 
-O colega **Tiago Batista** faz **PCB caseira no laser** (grava a máscara e corrói o cobre, sem
-depender de fábrica). Isso abre duas possibilidades para o BMO:
+Após reunião com o Tiago Batista (23/10/2026), a decisão foi **não usar perfboard nem PCB
+caseira no laser**, e sim projetar a placa no **EasyEDA** e fabricar na **JLCPCB** (fábrica, China):
 
-- **Conector card edge** (cartucho de verdade) na faixa acima do D-pad vira viável já no v1,
-  não só numa v2 futura. É o acabamento mais fiel ao personagem.
-- O próprio corpo do circuito pode migrar de **perfboard para PCB**, deixando a montagem bem
-  mais limpa e robusta.
+- **PCB única** com o ESP32-S3 e todo o circuito, incluindo **carga, BMS e boost como CIs SMD**
+  soldados de fábrica (os CIs minúsculos que não dá para soldar em casa vêm prontos).
+- **Mais barato do que parece:** ordem de ~R$ 100 por um lote de ~5 placas (confirmar na cotação).
+- Resende só encaixa os periféricos grandes (ESP32 se não for SMD, tela, antena) quando a placa chegar.
+- O **card edge** do conector de expansão sai nessa mesma PCB, com qualidade de fábrica.
+- Papel do Tiago Batista: **ensinar o EasyEDA e orientar o projeto**; a fabricação é da JLCPCB.
+- A JLCPCB também faz **impressão 3D / usinagem da carcaça** (plástico, alumínio, titânio) — opção
+  em aberto para o corpo, concorrendo com a impressão do Tiago Efraim (ver Carcaça 3D).
 
-Limites a confirmar com ele antes de decidir: densidade de trilhas (o ESP32-S3 e os módulos
-têm muitos pinos juntos), single vs double side, e quem desenha a PCB (KiCad/EasyEDA).
-Reunião de alinhamento a marcar. Enquanto não fecha, o conector padrão é **Grove/pin header
-no perfboard**.
+Fluxo: desenhar no EasyEDA → cotar/fabricar na JLCPCB → receber → soldar periféricos → montar na carcaça.
 
 ### Cartuchos de expansão (o que o card edge permite)
 
@@ -307,9 +318,9 @@ borda de contatos dourados, mudando só etiqueta e antena:
 |---|---|
 | ![Conceito do cartucho de jogo](docs/img/cartucho-conceito.jpg) | ![Conceito do cartucho LoRa](docs/img/cartucho-lora-conceito.jpg) |
 
-Servem de referência do card edge para a conversa com o Tiago Batista e para o CAD. Decidir na PCB real
+Servem de referência do card edge para o projeto no EasyEDA e para o CAD. Decidir na PCB real
 se os contatos ficam de um lado (single-side) ou dos dois lados (double-side, dobra os pinos no
-mesmo espaço).
+mesmo espaço) — com fabricação JLCPCB, as duas opções são viáveis.
 
 Nota técnica do LoRa: a etiqueta da imagem diz 433 MHz, mas no Brasil o LoRa opera na faixa ISM
 de **915 MHz** (Anatel: 902-907,5 e 915-928). 433 MHz é a faixa do CC1101 comum. Ajustar para
@@ -327,7 +338,7 @@ O **card edge não vem pronto** em nenhum módulo. Um cartucho é montado de dua
 1. **Módulo da função** (comprado, ex. módulo LoRa SX1276/1278 do AliExpress): traz o chip e
    tem pinos normais (SPI, energia). Faz o trabalho (rádio, GPS, sensor), mas NÃO tem a borda
    de contatos.
-2. **PCB-cartucho** (fabricada pelo Tiago Batista no laser): é a placa com o formato de
+2. **PCB-cartucho** (projetada no EasyEDA, fabricada na JLCPCB): é a placa com o formato de
    cartucho e os **contatos card edge na borda**. O módulo da função é soldado em cima dela, e
    as trilhas ligam os pinos do módulo aos contatos certos da borda.
 
@@ -336,8 +347,8 @@ O **card edge não vem pronto** em nenhum módulo. Um cartucho é montado de dua
 ```
 
 Ou seja: **cartucho completo = módulo da função + PCB-cartucho com card edge**. O conector
-fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. Por isso a PCB do Tiago Batista é
-essencial: o AliExpress dá o cérebro do rádio, o Tiago Batista dá o corpo do cartucho.
+fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. O AliExpress dá o cérebro do rádio;
+a PCB-cartucho (desenhada no EasyEDA, fabricada na JLCPCB) dá o corpo do cartucho.
 
 ### Dimensões conhecidas
 | Peça | Medida |
@@ -352,25 +363,30 @@ essencial: o AliExpress dá o cérebro do rádio, o Tiago Batista dá o corpo do
 ## Montagem passo a passo
 
 1. Confirmar entrada do v1: só D-pad + botões, ou com analógico (sticks do controle PS3 no ADC).
-2. Montar o núcleo na protoboard: ESP32-S3 + tela + CC1101 (sem solda). Rodar Bruce / MicroPython.
-3. Testar cada módulo isolado em MicroPython (NFC lê tag, tela acende, scan WiFi).
-4. Somar NFC, IR, áudio e mic.
-5. Ligar botões/D-pad no GPIO e integrar no firmware.
-6. Programar o rosto animado do BMO na tela principal.
-7. Comprar a bateria pela medida; modelar e imprimir a carcaça.
+2. **Validação antes da PCB (escolha):** o Tiago Batista sugere simular no EasyEDA e ir direto para a
+   placa. Validar o núcleo (ESP32-S3 + tela + CC1101) numa protoboard antes custa um pouco de
+   tempo, mas reduz o risco de um erro caro já fabricado. Recomendado ao menos simular; testar
+   em bancada é opcional conforme a confiança no projeto.
+3. Projetar a PCB no EasyEDA: núcleo + **carga/BMS/boost SMD** + **card edge** do conector.
+   Cotar e fabricar na JLCPCB.
+4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
+5. Firmware: Bruce (base), rosto do BMO na tela, retrogames no cartão SD.
+6. Ligar botões/D-pad e integrar no input do firmware.
+7. Carcaça (impressão do Tiago Efraim ou JLCPCB) + bateria comprada pela medida.
 
 ---
 
 ## Roadmap
 
 - [ ] Fechar entrada (D-pad + botões vs analógico)
-- [ ] Protoboard: ESP32 + tela + CC1101 rodando Bruce
+- [ ] Validar núcleo (simular no EasyEDA e/ou protoboard): ESP32 + tela + CC1101 com Bruce
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
 - [ ] Áudio (speaker) + mic
 - [ ] Rosto animado na tela principal
 - [ ] Retro-Go rodando um jogo
-- [ ] Alinhar PCB caseira com o Tiago Batista (card edge vs perfboard)
+- [ ] Projetar a PCB no EasyEDA (com carga/BMS/boost/card edge) e cotar na JLCPCB
+- [ ] Definir carcaça: impressão do Tiago Efraim vs JLCPCB
 - [ ] Modelar carcaça no CAD
 - [ ] Imprimir e montar
 - [ ] (Futuro) Modo agente via WiFi/BLE
@@ -392,6 +408,9 @@ Alternativas avaliadas e **descartadas** (documentadas para não repetir):
 | Teclado QWERTY no v1 | Removido de propósito; vai para o Projeto 2 (Pi/Kali) |
 | Pendrive USB como armazenamento | O microSD já cobre |
 | Segunda tela (OLED de status) | Sem o teclado, a tela única ILI9341 faz rosto + menu + status |
+| Perfboard / fiação manual | Substituído por PCB projetada (EasyEDA → JLCPCB); montagem mais limpa |
+| PCB caseira no laser | Fábrica (JLCPCB) faz trilha mais fina e já solda os SMD de carga/BMS |
+| Módulos avulsos TP4056 + MT3608 | Carga/BMS/boost integrados como SMD na PCB |
 
 ---
 
