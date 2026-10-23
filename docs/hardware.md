@@ -19,8 +19,7 @@ Preços e links do AliExpress variam e expiram, então a tabela usa **termos de 
 | Item | Qtd | Termo de busca | Observação |
 |---|---:|---|---|
 | ESP32-S3 DevKitC-1 N16R8 | 1 | `ESP32-S3 DevKitC-1 N16R8` | 16MB flash, 8MB PSRAM, 2x USB-C, pré-soldado |
-| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (SKU MSP3217) |
-| OLED 1,3" SH1106 128×64 I²C | 1 | `OLED 1.3 I2C SH1106` | rosto do BMO + status (0x3C) |
+| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (SKU MSP3217). Tela única: rosto do BMO + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | sub-GHz |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | DIP switch em I²C (0x24) |
 | Par IR KY-022 + KY-005 | 1 | `KY-022 KY-005` | RX + TX |
@@ -40,7 +39,7 @@ Preços e links do AliExpress variam e expiram, então a tabela usa **termos de 
 | Jumpers Dupont (M-M e M-F) | kit | `Dupont jumper wire kit` | protoboard |
 | Fio fino 30 AWG | 1 | `30 AWG silicone wire` | fiação fina |
 
-**Removido do v1** (foi para o Projeto 2): teclado Rii i8, 2× MCP23017, soquetes DIP.
+**Removido do v1**: teclado Rii i8, 2× MCP23017 e soquetes DIP (foram para o Projeto 2); OLED 1,3" secundário (a tela única faz rosto + menu + status).
 
 ---
 
@@ -53,8 +52,7 @@ ESP32-S3 N16R8 (WiFi + BT nativo)
 │   ├── CC1101
 │   └── MicroSD
 ├── I²C (SDA/SCL)
-│   ├── PN532 (0x24)
-│   └── OLED SH1106 (0x3C)
+│   └── PN532 (0x24)
 ├── I²S
 │   ├── MAX98357A (saída, alimentado em 5V)
 │   └── INMP441 (entrada, mic)
@@ -66,7 +64,7 @@ ESP32-S3 N16R8 (WiFi + BT nativo)
 ```
 
 - **SPI** (SCK/MOSI/MISO compartilhados, cada um com seu CS): Display, CC1101, MicroSD.
-- **I²C** (SDA/SCL): PN532 (0x24), OLED SH1106 (0x3C).
+- **I²C** (SDA/SCL): PN532 (0x24). Tela única; sem OLED.
 - **I²S**: MAX98357A (saída) + INMP441 (entrada), mesmo barramento.
 - **GPIO direto**: IR RX/TX, botões/D-pad, leitura de bateria.
 
@@ -125,7 +123,7 @@ VOUT do MT3608 (5,0V) → MAX98357A (alimentado em 5V)
 |---|---|
 | MT3608 | Ajustar para 5,0V com multímetro **antes** de conectar ao ESP32 |
 | PN532 | DIP switches em I²C (0x24). Plano B: HSU (serial) se instável |
-| I²C | Pull-ups de 4,7k em SDA e SCL. O scan deve achar `0x24` e `0x3C` |
+| I²C | Pull-ups de 4,7k em SDA e SCL. O scan deve achar `0x24` (PN532) |
 | microSD | Formatar em FAT32 |
 
-Configurações de IDE e drivers (PSRAM, flash, ILI9341, SH1106) estão em [firmware.md](firmware.md#configuração-da-placa).
+Configurações de IDE e drivers (PSRAM, flash, ILI9341) estão em [firmware.md](firmware.md#configuração-da-placa).

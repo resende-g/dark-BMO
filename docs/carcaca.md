@@ -20,8 +20,7 @@ Parafusos na **traseira** com **heat-set inserts** (não na frente).
 
 | Componente | Posição e observações |
 |---|---|
-| Tela principal | topo |
-| OLED do rosto | recorte sob medida (~35 × 33 mm) |
+| Tela principal (única) | topo; faz rosto + menu + status |
 | Antena SMA | topo |
 | Antena do PN532 | virada para fora, sem metal atrás |
 | LED + receptor IR | frente |
@@ -35,7 +34,6 @@ Parafusos na **traseira** com **heat-set inserts** (não na frente).
 | Peça | Medida |
 |---|---|
 | Tela principal (placa) | 55 × 65 mm (área ativa 48,6 × 64,8 mm) |
-| OLED (módulo) | ~35 × 33 mm |
 | Bateria alvo | ~6 mm de espessura, 2000 mAh |
 
 **A medir:** altura livre acima dos controles, que define a orientação da tela principal.

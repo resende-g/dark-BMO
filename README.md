@@ -226,7 +226,7 @@ Um firmware por vez (como "cartuchos de software"):
 | **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Suporta ILI9341 |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
-| **Modo agente** (futuro) | BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/telas. Só firmware, sem hardware novo |
+| **Modo agente** (futuro) | BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
 
 A parte custom a escrever é a leitura dos botões/D-pad e a integração no input do Bruce/emulador.
 
@@ -425,5 +425,5 @@ Código sob [MIT](LICENSE). Documentação sob
 
 ---
 
-*Projeto pessoal de aprendizado. Feito com peças de ferro-velho, um teclado velho e muita
-pesquisa. Be more.*
+*Projeto pessoal de aprendizado. Feito com ESP32, solda, impressão 3D, ajuda dos amigos e
+muita pesquisa. Be more.*

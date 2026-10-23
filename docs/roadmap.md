@@ -17,7 +17,7 @@ Próximos passos, montagem e decisões do BMO v1. Visão geral no [README](../RE
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
 - [ ] Áudio (speaker) + mic
-- [ ] Rosto animado no OLED
+- [ ] Rosto animado na tela principal
 - [ ] Retro-Go rodando um jogo
 - [ ] Modelar carcaça no CAD
 - [ ] Imprimir e montar
@@ -31,9 +31,9 @@ Próximos passos, montagem e decisões do BMO v1. Visão geral no [README](../RE
 1. Confirmar entrada do v1: só D-pad + botões, ou com analógico (sticks do controle PS3 no ADC).
 2. Montar o núcleo na protoboard: ESP32-S3 + tela + CC1101 (sem solda). Rodar Bruce / MicroPython.
 3. Testar cada módulo isolado em MicroPython (NFC lê tag, tela acende, scan WiFi).
-4. Somar NFC, IR, áudio, mic e OLED do rosto.
+4. Somar NFC, IR, áudio e mic.
 5. Ligar botões/D-pad no GPIO e integrar no firmware.
-6. Programar o rosto animado do BMO no OLED.
+6. Programar o rosto animado do BMO na tela principal.
 7. Comprar a bateria pela medida; modelar e imprimir a carcaça.
 
 ---
@@ -51,3 +51,4 @@ Alternativas avaliadas e **descartadas** (documentadas para não repetir):
 | Segundo ESP32 / placa de processamento acoplada | O "cérebro extra" é remoto por WiFi/BLE, não acoplado por fio |
 | Teclado QWERTY no v1 | Removido de propósito; vai para o Projeto 2 (Pi/Kali) |
 | Pendrive USB como armazenamento | O microSD já cobre |
+| Segunda tela (OLED de status) | Sem o teclado, a tela única ILI9341 faz rosto + menu + status |
