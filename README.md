@@ -128,6 +128,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | desacoplamento |
 | Jumpers Dupont (M-M e M-F) | kit | `Dupont jumper wire kit` | protoboard |
 | Fio fino 30 AWG | 1 | `30 AWG silicone wire` | fiação fina |
+| Soquete card edge 2,54 mm 20P | 1 (lote 5) | `Edge Card Connector Slot 2.54mm 2x10 20P` | série DK920A-20M; recebe o cartucho. Soldado na PCB principal. Ver Cartuchos |
 
 **Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
@@ -203,6 +204,25 @@ USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [chav
 - Carga, proteção e boost são **CIs SMD na placa** (minúsculos, soldados de fábrica pela JLCPCB).
 - Projeto do circuito de energia no EasyEDA, com orientação do Tiago Batista.
 - Continua valendo: 5V para MAX98357A, 3,3V para o resto, nunca expor a bateria crua.
+- **Limitar a corrente de carga.** A bateria LiPo 1S é pequena; 1 A (padrão dos módulos de
+  carga avulsos) a estraga. Dimensionar o CI de carga para uma corrente segura (tipicamente
+  ~0,5C) no EasyEDA. Essa é a parte mais crítica do projeto de energia (nota do Tiago Batista).
+- **BMS obrigatório.** Proteção de 1 célula: não deixa cair abaixo de ~2,5–3,0 V nem passar de
+  4,2 V, e monitora a carga. Entra como SMD na mesma PCB.
+
+### Conector de carga USB-C dedicado
+
+Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário não confundir:
+
+- **Só energia.** Os pinos de dados (D+/D−) ficam desligados nessa porta; ela entra no circuito
+  de carga.
+- **Dois resistores de 5,1 kΩ, um em cada pino CC (CC1→GND, CC2→GND), separados.** Sem eles,
+  um carregador com cabo C-C entrega 0 V e o BMO não carrega. Ligar os dois CC num resistor só
+  é erro clássico. Só com os resistores, a carga é a padrão de ~500 mA (mais corrente exige um
+  CI de carga que negocie com o carregador).
+- **A cor fica na carcaça, não no conector** (não há USB-C com isolador colorido à venda):
+  moldura/anel colorido em volta da porta impresso em 3D, ícone ⚡ em relevo e o LED de carga
+  ao lado. A porta de dados fica em outra posição/cor.
 
 ---
 
@@ -257,9 +277,11 @@ referência visual.
   - **Solução escolhida: card edge** (borda da PCB vira contato, estilo cartucho). Com a PCB
     indo para a JLCPCB (fábrica), a densidade deixa de ser problema e o **card edge COMPLETO**
     é viável: I²C + SPI + UART + 3V3 + 5V + GND + 2 GPIO (~13 a 15 contatos).
-  - **Conector fêmea primeiro:** o soquete que recebe o cartucho é definido antes do cartucho
-    (ele dita largura, nº de contatos e pitch). Opção de comprar soquete card edge pronto
-    (inclusive reaproveitar slot SD/RAM) ou desenhar na PCB. A definir no projeto EasyEDA.
+  - **Conector fêmea primeiro (definido):** o soquete que recebe o cartucho é escolhido antes
+    do cartucho (ele dita largura, nº de contatos, pitch e espessura de placa). **Soquete
+    escolhido: DK920A-20M** (card edge 2,54 mm, 2×10 = 20 contatos, furo passante/vertical,
+    fenda de 1,9 mm para cartucho de 1,6 mm, contatos de ouro, 2 A/contato). Soldado na PCB
+    principal. Medir a peça real antes de desenhar a pegada no EasyEDA (ver Especificação do cartucho).
   - Proteção obrigatória: polyfuse na linha de alimentação do conector e CS dedicado no SPI.
 - **Traseira multifuncional (em duas zonas):**
   - Zona de cima **fixa** (parafusada, segura a eletrônica).
@@ -318,9 +340,10 @@ borda de contatos dourados, mudando só etiqueta e antena:
 |---|---|
 | ![Conceito do cartucho de jogo](docs/img/cartucho-conceito.jpg) | ![Conceito do cartucho LoRa](docs/img/cartucho-lora-conceito.jpg) |
 
-Servem de referência do card edge para o projeto no EasyEDA e para o CAD. Decidir na PCB real
-se os contatos ficam de um lado (single-side) ou dos dois lados (double-side, dobra os pinos no
-mesmo espaço) — com fabricação JLCPCB, as duas opções são viáveis.
+Servem de referência do card edge para o projeto no EasyEDA e para o CAD. Com o soquete
+DK920A-20M (2×10), os **contatos ficam nos dois lados** da língua (10 na frente, 10 atrás),
+como numa placa de memória — o visual muda um pouco em relação aos conceitos, que mostram uma
+face só.
 
 Nota técnica do LoRa: a etiqueta da imagem diz 433 MHz, mas no Brasil o LoRa opera na faixa ISM
 de **915 MHz** (Anatel: 902-907,5 e 915-928). 433 MHz é a faixa do CC1101 comum. Ajustar para
@@ -350,23 +373,71 @@ Ou seja: **cartucho completo = módulo da função + PCB-cartucho com card edge*
 fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. O AliExpress dá o cérebro do rádio;
 a PCB-cartucho (desenhada no EasyEDA, fabricada na JLCPCB) dá o corpo do cartucho.
 
+### Especificação do cartucho (card edge)
+
+Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCPCB.
+
+- **Placa:** 1,6 mm de espessura, 2 camadas. Tamanho total **52 × 52 mm** (não 50): a JLCPCB
+  **não faz o chanfro dos contatos em placa menor que 50 × 50 mm**, então 52 dá folga. Mesma
+  medida para todos os cartuchos (modelo único).
+- **Língua de encaixe:** a abertura do soquete tem ~28,3 mm, então a parte que entra é uma
+  **língua de ~27,8 mm de largura** (com folga), com degraus que se alargam até o corpo de
+  52 mm — formato de placa de memória/PCI. Comprimento da língua = profundidade da fenda do
+  soquete (a medir na peça, ~8 mm). Os degraus servem de batente.
+- **Contatos:** 2×10 = 20, pitch 2,54 mm (10 na frente, 10 atrás), centralizados na língua
+  (22,86 mm da 1ª à última), a **0,6 mm da borda**, com **máscara de solda aberta** sobre eles.
+- **Acabamento JLCPCB:** contatos dourados exigem **ENIG**; **chanfro de 30°** na ponta da
+  língua. Cantos da ponta cortados a 45° no contorno ajudam a centralizar.
+- **Durabilidade:** o ouro do ENIG é fino e desgasta com muitas trocas (a JLCPCB recomenda ouro
+  duro para encaixe frequente, não confirmado como opção no pedido). Para troca ocasional de
+  cartucho, ENIG + guias na fenda deve bastar.
+- **Anti-inversão:** o soquete é simétrico. Deslocar a língua um pouco para um lado e fazer a
+  fenda da carcaça com o mesmo deslocamento, para o cartucho invertido (que trocaria 5 V por
+  3,3 V nos pinos) não entrar.
+- **Apoio mecânico:** o DK920A não tem abas de fixação; toda a força de encaixe cai nas 20
+  soldas. A carcaça precisa de um apoio encostado no corpo do soquete.
+- **Pegada na PCB principal:** 2×10 furos (~1,0 mm), pitch 2,54 mm, 5,08 mm entre as fileiras;
+  contorno do corpo 31,7 × 9,2 mm; altura ~10,2 mm acima da placa (define a folga até a frente
+  da carcaça). Partir da pegada "20 PIN CARD EDGE CONNECTOR - 2.54MM (MALE)" da biblioteca EasyEDA.
+- **Reconhecimento (opcional):** uma EEPROM I²C pequena (ex. 24C02) em cada cartucho guarda o
+  "nome" dele, e o BMO identifica sozinho o que foi plugado — usa o I²C que já está no conector.
+- **A confirmar na JLCPCB:** se ela chanfra uma língua com degraus (padrão de placa de memória,
+  deve dar) e se o mínimo de 50 mm vale para os dois lados ou só largura (se for só largura, o
+  cartucho pode ficar mais curto, ~52 × 25 mm, e sair menos para fora da frente).
+
+> Ponto em aberto (pede decisão): com cartucho de 52 × 52 mm o soquete prende só ~8–10 mm e
+> **~40 mm do cartucho ficam para fora da frente**, abaixo da tela. Alternativa: cartucho curto
+> (52 × 25 mm) num painel destacável de 52 × 52 para ganhar o chanfro de fábrica — depende da
+> resposta da JLCPCB acima.
+
 ### Dimensões conhecidas
 | Peça | Medida |
 |---|---|
 | Tela principal (placa) | 55 × 65 mm (área ativa 48,6 × 64,8 mm) |
 | Bateria alvo | ~6 mm de espessura, 2000 mAh |
+| Cartucho (PCB) | 52 × 52 mm, 1,6 mm; língua ~27,8 mm |
+| Soquete DK920A-20M (corpo) | 31,7 × 9,2 mm, altura ~10,2 mm; fileiras a 5,08 mm; fenda 1,9 mm |
 
 > A medir: altura livre acima dos controles, que define a orientação da tela principal.
+> A medir na peça do soquete: profundidade da fenda (define o comprimento da língua) e se
+> aceita placa de 1,6 mm (encaixar uma sobra de PCB e ver se entra justa).
 
 ---
 
 ## Montagem passo a passo
 
 1. Confirmar entrada do v1: só D-pad + botões, ou com analógico (sticks do controle PS3 no ADC).
-2. **Validação antes da PCB (escolha):** o Tiago Batista sugere simular no EasyEDA e ir direto para a
-   placa. Validar o núcleo (ESP32-S3 + tela + CC1101) numa protoboard antes custa um pouco de
-   tempo, mas reduz o risco de um erro caro já fabricado. Recomendado ao menos simular; testar
-   em bancada é opcional conforme a confiança no projeto.
+2. **Validação antes da PCB.** A simulação do EasyEDA é para circuitos analógicos: **não testa
+   microcontrolador nem SPI**, ou seja, não valida o núcleo ESP32-S3 + tela + CC1101 rodando o
+   Bruce (serve, no máximo, para o circuito de energia). Então:
+   - **Bancada (recomendado):** montar o núcleo na protoboard (DevKitC + tela + CC1101) e rodar
+     o Bruce de verdade antes de fabricar. Fecha uma pinagem já testada e evita placa com erro.
+     Teste do CC1101: ler o registrador de versão por SPI (confirma fiação/CS); capturar e
+     reenviar o sinal de um controle 433 MHz seu.
+   - **Wokwi (grátis, online):** ESP32-S3 e ILI9341 são suportados — dá para adiantar rosto,
+     menu e botões antes de as peças chegarem. Não tem modelo de CC1101.
+   - Reduzir risco: 1ª versão da placa com a DevKitC encaixada por pinos (não o módulo ESP32
+     soldado); se o roteamento tiver erro, perde-se só a placa e a DevKit se reaproveita.
 3. Projetar a PCB no EasyEDA: núcleo + **carga/BMS/boost SMD** + **card edge** do conector.
    Cotar e fabricar na JLCPCB.
 4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
@@ -385,7 +456,9 @@ a PCB-cartucho (desenhada no EasyEDA, fabricada na JLCPCB) dá o corpo do cartuc
 - [ ] Áudio (speaker) + mic
 - [ ] Rosto animado na tela principal
 - [ ] Retro-Go rodando um jogo
+- [ ] Comprar o soquete DK920A-20M e medir a peça real (fenda, espessura aceita)
 - [ ] Projetar a PCB no EasyEDA (com carga/BMS/boost/card edge) e cotar na JLCPCB
+- [ ] Fechar a especificação do cartucho (língua, anti-inversão) e o modelo único no EasyEDA
 - [ ] Definir carcaça: impressão do Tiago Efraim vs JLCPCB
 - [ ] Modelar carcaça no CAD
 - [ ] Imprimir e montar
