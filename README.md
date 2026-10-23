@@ -1,9 +1,9 @@
 # dark-bmo
 
 <p align="center">
-  <img src="docs/img/bmo-capa.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo e botões coloridos" width="320">
+  <img src="docs/img/bmo-capa.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo, botões coloridos e o slot de cartucho (card edge) acima dos controles" width="640">
   <br>
-  <sub>Conceito visual do BMO v1.</sub>
+  <sub>Conceito visual do BMO v1 (com o slot de cartucho card edge acima do D-pad).</sub>
 </p>
 
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
@@ -338,18 +338,13 @@ dourados; cada cartucho é uma "capa de jogo" em pixel art, com um nome que func
 título de jogo antigo e codifica a função (sem logo de marca). Prompts em
 [docs/cartuchos-prompts.md](docs/cartuchos-prompts.md).
 
-| Conceito de jogo | Conceito LoRa |
-|---|---|
-| ![Conceito do cartucho de jogo](docs/img/cartucho-conceito.jpg) | ![Conceito do cartucho LoRa](docs/img/cartucho-lora-conceito.jpg) |
-
 | WAVE RIDER — cartucho LoRa 915 MHz (antena de mola) | EAGLE EYE — cartucho câmera (lente frontal, visão p/ o modo agente) |
 |---|---|
 | ![Cartucho WAVE RIDER](docs/img/cartucho-wave-rider.jpg) | ![Cartucho EAGLE EYE](docs/img/cartucho-eagle-eye.jpg) |
 
 Servem de referência do card edge para o projeto no EasyEDA e para o CAD. Com o soquete
 DK920A-20M (2×10), os **contatos ficam nos dois lados** da língua (10 na frente, 10 atrás),
-como numa placa de memória — o visual muda um pouco em relação aos conceitos, que mostram uma
-face só. O cartucho câmera (EAGLE EYE) tem a lente na face frontal: o módulo (ex. OV2640) fica
+como numa placa de memória. O cartucho câmera (EAGLE EYE) tem a lente na face frontal: o módulo (ex. OV2640) fica
 virado para fora, no lado oposto aos contatos, e a carcaça do cartucho precisa de um furo para
 a lente.
 
