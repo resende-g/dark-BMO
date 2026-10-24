@@ -59,8 +59,8 @@ soldar, entender barramentos e escrever firmware.
 
 ## Status
 
-**Planejado, parcialmente comprado, ainda não montado.** Fase atual: aguardar peças,
-projetar a PCB (EasyEDA → JLCPCB) e começar o firmware.
+**Núcleo recebido (DevKitC, tela, CC1101), ainda não montado.** Fase atual: validar o núcleo
+na bancada, projetar a PCB (EasyEDA → JLCPCB) e começar o firmware.
 
 ---
 
@@ -112,14 +112,14 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Item | Qtd | Termo de busca | Observação |
 |---|---:|---|---|
 | ESP32-S3 DevKitC-1 N16R8 | 1 | `ESP32-S3 DevKitC-1 N16R8` | 16MB flash, 8MB PSRAM, 2x USB-C, pré-soldado |
-| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (MSP3217). Tela ÚNICA: rosto do BMO + menu + status |
+| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (MSP3217). A unidade comprada veio na versão touch (MSP3218, 14 pinos, XPT2046 + caneta): funciona igual, com os pinos T_* sem ligação no v1. Tela ÚNICA: rosto do BMO + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | sub-GHz |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | DIP switch em I²C (0x24) |
 | Par IR KY-022 + KY-005 | 1 | `KY-022 KY-005` | RX + TX |
 | MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | alimentar em 5V |
 | Alto-falante 8 Ω 2 W mini | 1 | `speaker 8 ohm 2W mini` | ~28 mm |
 | Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | captação de voz |
-| Módulo MicroSD SPI (mini 3,3V) | 1 | `Micro SD card module SPI` | variante mini |
+| Módulo MicroSD SPI (mini 3,3V) | 1 | `Micro SD card module SPI` | variante mini. Fica na porta traseira (ver Traseira). A tela recebida também tem slot SD no verso, mas ele fica sem uso: atrás da tela, a troca do cartão exigiria abrir a zona parafusada de cima |
 | Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | formatar FAT32 |
 | Bateria LiPo 3,7V 1S ~2000 mAh | 1 | `LiPo 3.7V 2000mAh 1S protection` | comprar por último, ~6 mm de espessura |
 | Botões tácteis 6×6 | vários | `tactile button 6x6 kit` | D-pad + ação (entrada do v1) |
@@ -416,12 +416,14 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 ### Dimensões conhecidas
 | Peça | Medida |
 |---|---|
-| Tela principal (placa) | 55 × 65 mm (área ativa 48,6 × 64,8 mm) |
+| Tela principal (placa) | 89,3 × 55,04 mm (datasheet; na régua deu 88 × 54); vidro visível ~70 × 51 mm (régua); área ativa 64,8 × 48,6 mm (datasheet) |
 | Bateria alvo | ~6 mm de espessura, 2000 mAh |
 | Cartucho (PCB) | 52 × 52 mm, 1,6 mm; língua ~27,8 mm |
 | Soquete DK920A-20M (corpo) | 31,7 × 9,2 mm, altura ~10,2 mm; fileiras a 5,08 mm; fenda 1,9 mm |
 
 > A medir: altura livre acima dos controles, que define a orientação da tela principal.
+> A medir na tela, com paquímetro antes do CAD: espessura total com o painel de toque e o
+> contorno do vidro.
 > A medir na peça do soquete: profundidade da fenda (define o comprimento da língua) e se
 > aceita placa de 1,6 mm (encaixar uma sobra de PCB e ver se entra justa).
 
@@ -436,7 +438,8 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
    - **Bancada (recomendado):** montar o núcleo na protoboard (DevKitC + tela + CC1101) e rodar
      o Bruce de verdade antes de fabricar. Fecha uma pinagem já testada e evita placa com erro.
      Teste do CC1101: ler o registrador de versão por SPI (confirma fiação/CS); capturar e
-     reenviar o sinal de um controle 433 MHz seu.
+     reenviar o sinal de um controle 433 MHz seu. Sketches de teste da bancada:
+     `firmware/teste_tela` e `firmware/teste_cc1101`.
    - **Wokwi (grátis, online):** ESP32-S3 e ILI9341 são suportados — dá para adiantar rosto,
      menu e botões antes de as peças chegarem. Não tem modelo de CC1101.
    - Reduzir risco: 1ª versão da placa com a DevKitC encaixada por pinos (não o módulo ESP32
