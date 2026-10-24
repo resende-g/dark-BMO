@@ -59,8 +59,9 @@ soldar, entender barramentos e escrever firmware.
 
 ## Status
 
-**Núcleo recebido (DevKitC, tela, CC1101), ainda não montado.** Fase atual: validar o núcleo
-na bancada, projetar a PCB (EasyEDA → JLCPCB) e começar o firmware.
+**Bancada montada: Bruce rodando com a tela e 3 botões.** O CC1101 chegou, mas ainda não foi
+ligado (faltam jumpers com ponta fêmea). Fase atual: fechar a validação do núcleo na bancada,
+projetar a PCB (EasyEDA → JLCPCB) e seguir no firmware.
 
 ---
 
@@ -160,7 +161,9 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 ## Pinagem (ESP32-S3 N16R8)
 
-Proposta de referência — conferir contra a serigrafia da placa; o Bruce permite setar pino a pino.
+Tela e botões já testados na bancada; o resto é proposta. Conferir contra a serigrafia da placa.
+No Bruce, os pinos da tela, dos botões e do CC1101 são fixados na compilação
+(`firmware/bruce/bmo.ini`); só os pinos de IR e de RF de um fio dá para trocar pelo menu.
 
 | Função | GPIO | Nota |
 |---|---:|---|
@@ -184,7 +187,10 @@ Proposta de referência — conferir contra a serigrafia da placa; o Bruce permi
 | I²S SD IN (mic) | 6 | mic em 3,3V, L/R no GND |
 | VBAT sense | 1 | divisor 100k/100k, ×2 no firmware |
 | Botão BOOT/power | 0 | strapping |
-| Botões / D-pad (gaming) | 38, 39, 47, 48, … | GPIO livres (o teclado saiu, sobram muitos) |
+| Botão cima | 39 | botões ligam o GPIO ao GND (pull-up interno) |
+| Botão OK | 2 | GPIO RTC: é o que acorda do deep sleep |
+| Botão baixo | 47 | cima + baixo juntos = voltar, no Bruce |
+| Mais botões (D-pad completo) | 7, … | evitar 38 e 48: um deles é o LED RGB da DevKitC, conforme a revisão |
 
 **Não usar:** GPIO 26–37 (flash/PSRAM octal), 19/20 (USB nativo), 43/44 (UART0).
 Cuidado com strapping: 3, 45, 46.
@@ -229,7 +235,11 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 ## Configurações críticas
 
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
-- **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`.
+- **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`. Com o cabo na
+  porta USB nativa, também `USB CDC On Boot: Enabled` (senão o serial fica mudo).
+- **Bruce**: build próprio do BMO em `firmware/bruce/` (`build.sh`). O PlatformIO tem que rodar
+  num venv com Python 3.10 a 3.14 (o do Homebrew vem mais novo), e no ESP32-S3 a tela exige
+  `USE_HSPI_PORT`, senão o Bruce trava no boot.
 - **Display**: driver ILI9341 (tela única).
 - **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
@@ -242,12 +252,18 @@ Um firmware por vez (como "cartuchos de software"):
 
 | Firmware | Uso |
 |---|---|
-| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Suporta ILI9341 |
+| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Build próprio do BMO (versão 1.16.1, tela ILI9341 + 3 botões + CC1101) em `firmware/bruce/`: o binário oficial da DevKitC não tem tela |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
 | **Modo agente** (futuro) | BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
 
-A parte custom a escrever é a leitura dos botões/D-pad e a integração no input do Bruce/emulador.
+No Bruce, a leitura dos 3 botões já está em `firmware/bruce/interface.cpp`. Falta o D-pad
+completo e o input do emulador.
+
+```bash
+firmware/bruce/build.sh                 # compila (baixa o Bruce em ~/.cache na 1ª vez)
+firmware/bruce/build.sh "" upload       # compila e grava pela USB
+```
 
 ---
 
@@ -456,7 +472,9 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 ## Roadmap
 
 - [ ] Fechar entrada (D-pad + botões vs analógico)
-- [ ] Validar núcleo (simular no EasyEDA e/ou protoboard): ESP32 + tela + CC1101 com Bruce
+- [x] Bancada: DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e
+  Bruce rodando com 3 botões
+- [ ] CC1101 na bancada (`teste_cc1101` e captura de 433 MHz no Bruce): faltam jumpers fêmea
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
 - [ ] Áudio (speaker) + mic

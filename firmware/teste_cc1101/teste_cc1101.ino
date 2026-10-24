@@ -1,9 +1,9 @@
 // Teste de bancada do CC1101 (BMO v1): lê PARTNUM/VERSION por SPI e confere o fio do GDO0.
 // Pinagem: README > Pinagem. VCC do módulo no 3V3, NUNCA no 5V.
 // Sem biblioteca extra. Não transmite nada (dá para rodar sem antena).
-// Arduino IDE: placa "ESP32S3 Dev Module", PSRAM "OPI PSRAM", Flash Size "16MB".
-// Serial em 115200, pelo USB-C marcado UART/COM da DevKitC. Repete a cada 3 s,
-// então dá para mexer nos jumpers e ver o resultado mudar.
+// Arduino IDE: placa "ESP32S3 Dev Module", PSRAM "OPI PSRAM", Flash Size "16MB",
+// USB CDC On Boot "Enabled" (Serial em 115200 pelo USB-C marcado USB). Repete a
+// cada 3 s, então dá para mexer nos jumpers e ver o resultado mudar.
 #include <SPI.h>
 
 #define PIN_SCK  12

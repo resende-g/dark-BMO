@@ -4,8 +4,8 @@
 // Versão touch (MSP3218, 14 pinos): T_CLK, T_CS, T_DIN, T_DO e T_IRQ ficam sem ligação, e os SD_* do slot
 // no verso também (o microSD do BMO é o módulo separado, na porta traseira).
 // Biblioteca: "Adafruit ILI9341" (o gerenciador instala junto Adafruit GFX e BusIO).
-// Arduino IDE: placa "ESP32S3 Dev Module", PSRAM "OPI PSRAM", Flash Size "16MB".
-// Serial em 115200, pelo USB-C marcado UART/COM da DevKitC.
+// Arduino IDE: placa "ESP32S3 Dev Module", PSRAM "OPI PSRAM", Flash Size "16MB",
+// USB CDC On Boot "Enabled" (Serial em 115200 pelo USB-C marcado USB).
 //
 // O que conferir:
 // - O ID no serial deve ser 0x9341. 0x0000 ou 0xFFFF = MISO solto (a tela pode
