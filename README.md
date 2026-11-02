@@ -42,6 +42,7 @@ soldar, entender barramentos e escrever firmware.
 - [Versões do projeto](#versões-do-projeto)
 - [Recursos](#recursos)
 - [Lista de componentes (BOM)](#lista-de-componentes-bom)
+- [Compras em fases](#compras-em-fases)
 - [Arquitetura](#arquitetura)
 - [Pinagem](#pinagem-esp32-p4--esp32-c6)
 - [Alimentação](#alimentação)
@@ -60,7 +61,7 @@ soldar, entender barramentos e escrever firmware.
 
 ## Status
 
-**Bancada anterior:** ESP32-S3 DevKitC-1 N16R8, tela ILI9341 e 3 botões testados; CC1101 recebido, ainda sem teste por falta de jumpers fêmea. **Nova decisão arquitetural:** a placa principal será migrada para ESP32-P4 + ESP32-C6 (módulo/placa de desenvolvimento selecionado; compra não confirmada). A pinagem, o firmware e a PCB precisam ser redesenhados e validados para a nova plataforma. A compatibilidade direta do Bruce e do Retro-Go ainda precisa ser verificada/portada.
+**Bancada anterior:** ESP32-S3 DevKitC-1 N16R8, tela ILI9341 e 3 botões testados; CC1101 recebido, ainda sem teste por falta de jumpers fêmea. **Nova decisão arquitetural:** a placa principal será migrada para ESP32-P4 + ESP32-C6 (placa identificada em 02/11/2026: Guition JC-ESP32P4-M3-DEV; compra não confirmada; esquemático pedido ao vendedor). A pinagem, o firmware e a PCB precisam ser redesenhados e validados para a nova plataforma. A compatibilidade direta do Bruce e do Retro-Go ainda precisa ser verificada/portada.
 
 ---
 
@@ -112,7 +113,8 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 | Item | Qtd | Termo de busca | Situação / observação |
 |---|---:|---|---|
-| Placa principal ESP32-P4 + ESP32-C6 | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91; compra não confirmada. Substitui o ESP32-S3 na arquitetura final. Conferir modelo, pinout, PHY Ethernet e ligação P4-C6 antes da PCB |
+| Placa de desenvolvimento Guition JC-ESP32P4-M3-DEV | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91 (variação "ESP32-P4-Module", sem caixa de acrílico); compra não confirmada. Módulo JC-ESP32P4-M3 (ESP32-P4NRW32, 32 MB PSRAM, 16 MB flash, ESP32-C6 por SDIO), slot microSD físico, 3× USB-C, RJ45, 2× FPC MIPI, header 2×13 e vários JST. 92 × 62 mm. Serve para a bancada e para a carcaça v0; na PCB final, usar só o módulo M3. **Esquemático, pinout do header e footprint do módulo pedidos ao vendedor** |
+| Antena 2,4 GHz IPEX/U.FL (MHF1) | 1 | `2.4GHz IPEX antenna FPC` | Falta comprar. Obrigatória para o WiFi/BLE do C6: o módulo M3 tem conector IPEX, não antena de trilha. A antena SMA do CC1101 é de 433 MHz e **não serve**. Nunca transmitir sem antena. Conferir MHF1 (U.FL) vs MHF4 no conector do módulo |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | Já comprada e validada (MSP3218 touch); pinos T_* sem ligação no v1. Tela única: rosto + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
@@ -120,25 +122,43 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | Selecionado; R$ 5,99; compra não confirmada; alimentação conforme datasheet/módulo (projeto prevê 5 V) |
 | Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | Selecionado; R$ 7,44; compra não confirmada; conferir dimensões e cavidade acústica |
 | Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
-| Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
+| ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** A placa DEV tem slot microSD físico e o P4 tem SDIO nativo, mais rápido. Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. Na PCB final, slot microSD por SDIO |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
-| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
+| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
 | Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
 | Analógicos (sticks de PS3) | 2 | `PS3 analog joystick 3D thumbstick` | Origem a confirmar (reaproveitar de controle ou comprar). 2 eixos cada, lidos pelo ADC do P4; confirmar tensão e se o clique do stick será usado |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
 | Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | Selecionado; R$ 15,78; compra não confirmada. Inclui os três tipos; prioridade imediata: F-F para testar CC1101 |
-| Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Ainda falta colocar no carrinho; fiação fina e protótipos |
-| Conector/soquete card edge 2,54 mm, 20/34 pinos | 2 peças | `CE 225F 2.54mm 20 34 pin card edge slot connector` | Selecionado; R$ 15,07; compra não confirmada. Confirmar se são duas unidades/versões 20P e 34P, espessura da placa inserida, largura, altura e desenho mecânico; não fechar footprint da PCB antes de medir o componente real |
+| Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Comprar no Brasil: no AliExpress (carrinho de 02/11), o frete era R$ 83,04 para R$ 5,01 de fio. Fiação fina e protótipos |
+| Conector/soquete card edge 2,54 mm, 20/34 pinos | 2 peças | `CE 225F 2.54mm 20 34 pin card edge slot connector` | Selecionado; R$ 15,07; compra não confirmada. Confirmar se são duas unidades/versões 20P e 34P, espessura da placa inserida, largura, altura e desenho mecânico; não fechar footprint da PCB antes de medir o componente real. No carrinho de 02/11, o anúncio de R$ 14,33 diz "2*20P": confirmar se são **2 peças de 20P** (correto) ou **um soquete 2×20 = 40 contatos** (~55 mm, não cabe no cartucho de 52 mm) |
 
 
 
-**Itens selecionados para o carrinho (preços informados em 02/11/2026; compra não confirmada):** módulo microSD SPI R$ 4,11; INMP441 R$ 13,89; MAX98357A R$ 5,99; alto-falante 2030 8 Ω/2 W R$ 7,44; conjunto IR TX/RX R$ 6,99; PN532 V3 R$ 17,20; placa ESP32-P4+C6 R$ 116,91; bateria 1S 4.000 mAh R$ 59,48; conector card edge 20/34P R$ 15,07; kit 40 jumpers Dupont R$ 15,78. **Subtotal atualizado: R$ 262,86, sem frete.** O usuário já possui cartão microSD ADATA e botões; não incluir esses itens no carrinho. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. O subtotal não inclui resistores, capacitores, fio, PCB ou fabricação.
+**Carrinho revisado em 02/11/2026:** placa P4+C6 R$ 116,91; PN532 V3 R$ 17,20; conjunto IR R$ 7,03; alto-falante R$ 7,44; jumpers R$ 15,79; card edge R$ 14,33 (todos Choice, frete grátis); MAX98357A R$ 5,99; INMP441 R$ 13,89; módulo microSD R$ 4,11 e fio 30 AWG 3 × R$ 1,67 (fora do Choice). Os quatro itens fora do Choice somavam **R$ 177,91 de frete para R$ 29,10 em peças**, e o resumo não mostrava imposto nem ICMS. Decisões: o módulo microSD e o fio saem do carrinho; o MAX98357A e o INMP441 voltam depois em versão Choice; a bateria e os analógicos ainda não estão no carrinho. A compra foi dividida em fases (ver [Compras em fases](#compras-em-fases)). O usuário já possui cartão microSD ADATA e botões; não comprar. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. Resistores e capacitores avulsos só servem para bancada: na PCB, entram como SMD montados pela JLCPCB.
 
 **Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
 **Removido do v1**: teclado Rii i8, 2× MCP23017 e soquetes DIP (foram para o Projeto 2); **OLED 1,3" secundário** (sem o teclado, uma tela só já faz rosto + menu + status).
+
+---
+
+## Compras em fases
+
+Decidido em 02/11/2026: comprar aos poucos, cada fase destrava um teste. A carcaça **não é a
+primeira compra**: ela é desenhada em volta das peças que definem o volume (placa, tela,
+bateria, analógicos), então só é modelada depois da Fase 2.
+
+| Fase | Comprar | Custo aproximado | O que destrava |
+|---|---|---:|---|
+| 1. Núcleo | Placa JC-ESP32P4-M3-DEV, jumpers, antena 2,4 GHz IPEX | ~R$ 140 (Choice) + imposto | Rosto e menu na tela (já comprada), CC1101 (já recebido), WiFi/BLE, microSD (cartão já disponível) e botões (estoque). Firmware por meses. Pedir o esquemático e contar GPIOs e canais de ADC livres |
+| 2. Volume | 2 analógicos; bateria com PCM + NTC | ~R$ 60 + analógicos | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. A carga da v0 depende do esquemático da DEV (se tiver conector de bateria e carregador, usar o dela; se não, a v0 roda pela USB até a Fase 5) |
+| 3. Periféricos | PN532, IR, MAX98357A, alto-falante, INMP441 | ~R$ 52 (buscar Choice) | NFC, IR e áudio, cada um no espaço já reservado na v0 |
+| 4. Cartuchos | Soquete card edge | ~R$ 15 | Cartucho no topo; até lá, a fenda fica com tampa cega |
+| 5. Definitivo | PCB própria na JLCPCB (carga/BMS/boost SMD, riser do card edge, módulo M3) | ~R$ 100 por 5 placas + montagem, frete e imposto | Carcaça v1 em volta da PCB definitiva |
+
+Preços do carrinho de 02/11/2026; mudam e expiram.
 
 ---
 
@@ -186,11 +206,43 @@ USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [powe
 - Carga, proteção, boost e circuito de power-latch/gerenciamento do botão são **componentes SMD na placa** (definir topologia e CI no esquemático).
 - Projeto do circuito de energia no EasyEDA, com orientação do Tiago Batista.
 - Continua valendo: 5V para MAX98357A, 3,3V para o resto, nunca expor a bateria crua.
-- **Limitar a corrente de carga.** A bateria LiPo 1S é pequena; 1 A (padrão dos módulos de
-  carga avulsos) a estraga. Dimensionar o CI de carga para uma corrente segura (tipicamente
+- **Limitar a corrente de carga.** Dimensionar o CI de carga para uma corrente segura (até
   ~0,5C) no EasyEDA. Essa é a parte mais crítica do projeto de energia (nota do Tiago Batista).
+  Atualização de 02/11/2026: a nota original ("1 A estraga") valia para uma bateria pequena.
+  Com a de 4000 mAh, 1 A é 0,25C, uma carga suave. O limite passa a ser a entrada: só com os
+  resistores de 5,1 kΩ no CC, a porta garante ~500 mA (~8 h de carga). O carregador precisa
+  limitar a corrente de entrada ao que a fonte oferece.
 - **BMS obrigatório.** Proteção de 1 célula: não deixa cair abaixo de ~2,5–3,0 V nem passar de
   4,2 V, e monitora a carga. Entra como SMD na mesma PCB.
+
+### Riscos da bateria e recomendações
+
+Revisão de 02/11/2026. Uma LiPo incha principalmente por: carga acima de 4,2 V, descarga abaixo
+de ~3,0 V seguida de recarga, carga em temperatura alta, ficar parada em 4,2 V por muito tempo
+e pressão mecânica.
+
+1. **Carregador com power-path e entrada NTC.** Com carregador linear simples, o aparelho
+   ligado puxa corrente durante a carga, o CI não detecta o fim e a bateria fica presa em
+   4,2 V por horas, o que envelhece e incha a célula. Com power-path, o sistema roda pela USB
+   e a bateria só recebe a carga. Candidatos: TI BQ24074 (sem I²C) ou BQ25895/BQ25601 (com
+   I²C e telemetria). Conferir estoque na JLCPCB. **Decisão em aberto.**
+2. **Bateria com PCM e NTC de 3 fios.** O BMS da PCB vira a segunda camada de proteção.
+3. **Polaridade do JST:** conferir com multímetro antes de ligar qualquer bateria nova.
+4. **Corrente desligado ≤ ~10 µA**, somando power-latch, divisor de leitura da bateria, BMS e
+   carregador. Vazamento esvazia a bateria em meses na gaveta, e recarregar depois da descarga
+   profunda é causa de inchaço. O firmware desliga sozinho em ~3,3–3,4 V, antes do corte do BMS.
+5. **Dois USB-C:** com as duas portas ligadas ao mesmo tempo, os VBUS se alimentam um ao outro.
+   Opções: um USB-C só para dados e carga (mais simples) ou OR com diodo ideal antes do
+   carregador. **Decisão em aberto.**
+6. **Boost de 5 V talvez desnecessário.** O MAX98357A funciona direto da bateria (2,5–5,5 V). Se
+   a placa aceitar 3,3 V no pino 3V3, um buck-boost de 3,3 V esquenta menos que boost 5 V +
+   regulador 3,3 V. Se exigir 5 V, dimensionar o boost para o pico de WiFi + CC1101 + tela +
+   áudio com folga. **Decisão em aberto, depende do esquemático da DEV.**
+7. **Mecânica:** ~10% de folga de espessura no berço da bateria, sem cola rígida, sem aresta
+   encostando, longe do boost, do amplificador e do P4. Carcaça em PETG ou ASA, não PLA
+   (amolece a ~55 °C).
+8. **Validar na bancada antes da PCB:** testar o circuito de energia com um módulo pronto de
+   carga com power-path, em superfície não inflamável e sem deixar carregando sozinho.
 
 ### Conector de carga USB-C dedicado
 
@@ -213,6 +265,8 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
 - **ESP32-P4 + ESP32-C6:** selecionar o alvo/board package correspondente ao modelo exato da placa. Verificar suporte do Arduino-ESP32 e avaliar ESP-IDF para os recursos avançados do P4. Não reutilizar configurações específicas do ESP32-S3 sem validação.
 - **Bruce:** o build existente em `firmware/bruce/` foi feito para ESP32-S3. A migração para ESP32-P4+C6 depende de confirmar suporte do projeto upstream, drivers e periféricos; pode exigir portabilidade significativa. Não considerar o firmware atual compatível até compilar e testar na placa nova.
+- **Placa JC-ESP32P4-M3-DEV (guia da JCZN/Guition):** no Arduino-ESP32 3.x, alvo "ESP32P4 Dev Module", flash 16 MB QIO, PSRAM habilitada. Aparece como `/dev/ttyUSB*` (conversor USB-serial, reset pelo RTS). WiFi/BLE pelo `WiFi.h` comum via ESP-Hosted no C6 (SDIO). Demos do fabricante: `adc_test`, `lvgl`, `mp3_player`, `wifi_scan`.
+- **Antena do C6:** ligar a antena 2,4 GHz no IPEX do módulo antes de habilitar WiFi/BLE.
 - **Display**: driver ILI9341 (tela única).
 - **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
@@ -306,6 +360,20 @@ estados: `IDLE`, `THINKING`, `SCANNING`, `ANALYZING`, `SUCCESS`, `ALERT`, `ERROR
   lateral. (O microSD não fica na lateral: fica dentro da porta traseira, ver acima.)
 - Detalhes mecânicos precisos (recorte de botões, heat-sets, bosses) saem do **CAD**
   (Fusion / Tinkercad / FreeCAD), não de gerador de imagem.
+
+### Carcaça v0 (protótipo)
+
+Primeira carcaça, impressa depois da [Fase 2](#compras-em-fases), antes da PCB própria:
+
+- Leva a **placa DEV inteira**, fixada pelos 4 furos (62 × 56,4 mm), com os módulos ligados
+  por fio. É protótipo: a decisão de não usar fiação manual vale para a versão final.
+- Forma externa da variação 1 já na v0; espessura, parafusos e encaixe interno mudam na v1.
+- Furos e fendas de todas as peças já impressos (grade do speaker, mic, janela do IR, saída
+  SMA, fenda do cartucho, USB-C). Os que ainda não têm peça ficam com **tampas cegas**.
+- A largura da DEV (92 mm) ocupa quase toda a largura estimada do corpo (~100 mm), e o RJ45 é
+  alto e inútil num portátil: avaliar dessoldar o RJ45 na v0.
+- Contar com 2 ou 3 reimpressões. Antes, um corpo de prova pequeno com o encaixe dos standoffs
+  e dos parafusos.
 
 ### Fabricação: EasyEDA + JLCPCB (decidido)
 
@@ -423,6 +491,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 |---|---|
 | Tela principal (placa) | 89,3 × 55,04 mm (datasheet; na régua deu 88 × 54); vidro visível ~70 × 51 mm (régua); área ativa 64,8 × 48,6 mm (datasheet) |
 | Bateria selecionada | dimensões anunciadas 0,4 × 70 × 115 mm; confirmar unidade e medida real |
+| Placa JC-ESP32P4-M3-DEV | 92 × 62 mm; furos de fixação a 62 × 56,4 mm (foto do anúncio); RJ45 com ~13 mm de altura (estimado, medir) |
 | Cartucho (PCB) | 52 × 52 mm, 1,6 mm; língua ~27,8 mm |
 | Soquete DK920A-20M (corpo) | 31,7 × 9,2 mm, altura ~10,2 mm; fileiras a 5,08 mm; fenda 1,9 mm |
 
@@ -455,7 +524,12 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [x] Fechar entrada: D-pad + botões + dois analógicos (sticks de PS3 no ADC)
 - [ ] Projetar a riser do card edge no topo
 - [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
+- [ ] Fase 1: comprar placa JC-ESP32P4-M3-DEV + jumpers + antena 2,4 GHz IPEX
+- [ ] Receber do vendedor o esquemático da DEV, o pinout do header e o datasheet/footprint do módulo M3
 - [ ] Validar a placa ESP32-P4+C6 selecionada e definir nova pinagem
+- [ ] Fase 2: comprar os analógicos e a bateria (PCM + NTC); modelar e imprimir a carcaça v0
+- [ ] Decidir carregador (power-path), USB-C único vs OR com diodo ideal, e boost 5 V vs buck-boost 3,3 V
+- [ ] Validar o circuito de energia na bancada antes de fechar a PCB
 - [ ] Verificar suporte/portar Bruce e Retro-Go para ESP32-P4+C6
 - [ ] CC1101 na bancada (`teste_cc1101` e captura de 433 MHz no Bruce): faltam jumpers fêmea
 - [ ] NFC (PN532) lendo tag
@@ -487,6 +561,8 @@ Alternativas avaliadas e **descartadas** (documentadas para não repetir):
 | Segundo ESP32 / placa de processamento acoplada | O "cérebro extra" é remoto por WiFi/BLE, não acoplado por fio |
 | Teclado QWERTY no v1 | Removido de propósito; vai para o Projeto 2 (Pi/Kali) |
 | Pendrive USB como armazenamento | O microSD já cobre |
+| Módulo microSD SPI com conversor de nível | A DEV tem slot físico e o P4 tem SDIO; o módulo trava o SPI compartilhado |
+| Comprar todas as peças de uma vez | Dividido em fases por orçamento; a carcaça v0 só depois das peças que definem o volume |
 | Segunda tela (OLED de status) | Sem o teclado, a tela única ILI9341 faz rosto + menu + status |
 | Perfboard / fiação manual | Substituído por PCB projetada (EasyEDA → JLCPCB); montagem mais limpa |
 | PCB caseira no laser | Fábrica (JLCPCB) faz trilha mais fina e já solda os SMD de carga/BMS |
