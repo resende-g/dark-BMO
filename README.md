@@ -7,10 +7,10 @@
 </p>
 
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
-> Baseado em ESP32-S3, com cara de BMO (Hora de Aventura). Jogos retrô + RF / NFC / IR.
+> Plataforma planejada: ESP32-P4 + ESP32-C6, com cara de BMO (Hora de Aventura). Jogos retrô + RF / NFC / IR.
 
 ![status](https://img.shields.io/badge/status-planejamento%20%2F%20montagem-yellow)
-![plataforma](https://img.shields.io/badge/MCU-ESP32--S3-blue)
+![plataforma](https://img.shields.io/badge/MCU-ESP32--P4%2BC6-blue)
 ![licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
 ---
@@ -59,9 +59,7 @@ soldar, entender barramentos e escrever firmware.
 
 ## Status
 
-**Bancada montada: Bruce rodando com a tela e 3 botões.** O CC1101 chegou, mas ainda não foi
-ligado (faltam jumpers com ponta fêmea). Fase atual: fechar a validação do núcleo na bancada,
-projetar a PCB (EasyEDA → JLCPCB) e seguir no firmware.
+**Bancada anterior:** ESP32-S3 DevKitC-1 N16R8, tela ILI9341 e 3 botões testados; CC1101 recebido, ainda sem teste por falta de jumpers fêmea. **Nova decisão arquitetural:** a placa principal será migrada para ESP32-P4 + ESP32-C6 (módulo/placa de desenvolvimento selecionado; compra não confirmada). A pinagem, o firmware e a PCB precisam ser redesenhados e validados para a nova plataforma. A compatibilidade direta do Bruce e do Retro-Go ainda precisa ser verificada/portada.
 
 ---
 
@@ -95,11 +93,11 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Recurso | Hardware | Firmware base |
 |---|---|---|
 | Sub-GHz 433 MHz | CC1101 + antena SMA | Bruce |
-| NFC 13,56 MHz | PN532 (I²C) | Bruce |
-| Infravermelho (TX + RX) | par KY-022 / KY-005 | Bruce |
-| WiFi + Bluetooth | nativo do ESP32-S3 | Bruce |
-| Jogos retrô (NES, GB, GBC, SMS, GG, PCE) | ESP32-S3 + tela + SD | Retro-Go |
-| Áudio (som + mic) | MAX98357A + speaker + INMP441 | — |
+| NFC 13,56 MHz | PN532 V3 (I²C) | a validar/portar |
+| Infravermelho (TX + RX) | conjunto transmissor + receptor 38 kHz | a validar/portar |
+| WiFi 6 + Bluetooth/BLE | ESP32-C6 integrado à placa P4+C6 | a validar/portar |
+| Jogos retrô (NES, GB, GBC, SMS, GG, PCE) | ESP32-P4 + tela + microSD | avaliar portabilidade do Retro-Go |
+| Áudio (som + mic) | MAX98357A + speaker 8 Ω/2 W + INMP441 | firmware a desenvolver/validar |
 | Rosto animado do BMO | tela principal ILI9341 | custom |
 | Scripts / testes | — | MicroPython |
 
@@ -110,19 +108,19 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 > Preços e links do AliExpress variam e expiram; use os **termos de busca** abaixo. No NFC,
 > IR e áudio, confira sempre o chip (não o título genérico do anúncio).
 
-| Item | Qtd | Termo de busca | Observação |
+| Item | Qtd | Termo de busca | Situação / observação |
 |---|---:|---|---|
-| ESP32-S3 DevKitC-1 N16R8 | 1 | `ESP32-S3 DevKitC-1 N16R8` | 16MB flash, 8MB PSRAM, 2x USB-C, pré-soldado |
+| Placa principal ESP32-P4 + ESP32-C6 | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91; compra não confirmada. Substitui o ESP32-S3 na arquitetura final. Conferir modelo, pinout, PHY Ethernet e ligação P4-C6 antes da PCB |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (MSP3217). A unidade comprada veio na versão touch (MSP3218, 14 pinos, XPT2046 + caneta): funciona igual, com os pinos T_* sem ligação no v1. Tela ÚNICA: rosto do BMO + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | sub-GHz |
-| PN532 V3 NFC | 1 | `PN532 NFC module V3` | DIP switch em I²C (0x24) |
-| Par IR KY-022 + KY-005 | 1 | `KY-022 KY-005` | RX + TX |
-| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | alimentar em 5V |
-| Alto-falante 8 Ω 2 W mini | 1 | `speaker 8 ohm 2W mini` | ~28 mm |
-| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | captação de voz |
-| Módulo MicroSD SPI (mini 3,3V) | 1 | `Micro SD card module SPI` | variante mini. Fica na porta traseira (ver Traseira). A tela recebida também tem slot SD no verso, mas ele fica sem uso: atrás da tela, a troca do cartão exigiria abrir a zona parafusada de cima |
-| Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | formatar FAT32 |
-| Bateria LiPo 3,7V 1S ~2000 mAh | 1 | `LiPo 3.7V 2000mAh 1S protection` | comprar por último, ~6 mm de espessura |
+| PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
+| Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | Selecionado; R$ 6,99; compra não confirmada. Confirmar componentes e pinagem do conjunto |
+| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | Selecionado; R$ 5,99; compra não confirmada; alimentação conforme datasheet/módulo (projeto prevê 5 V) |
+| Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | Selecionado; R$ 7,44; compra não confirmada; conferir dimensões e cavidade acústica |
+| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
+| Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
+| Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | Ainda falta colocar no carrinho; preferir cartão legítimo, formatar FAT32 |
+| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
 | Botões tácteis 6×6 | vários | `tactile button 6x6 kit` | D-pad + ação (entrada do v1) |
 | Chave SPST slide mini | 1 | `SPST slide switch mini` | liga/desliga |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | pull-up I²C, divisor de bateria |
@@ -130,6 +128,10 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Jumpers Dupont (M-M e M-F) | kit | `Dupont jumper wire kit` | protoboard |
 | Fio fino 30 AWG | 1 | `30 AWG silicone wire` | fiação fina |
 | Soquete card edge 2,54 mm 20P | 1 (lote 5) | `Edge Card Connector Slot 2.54mm 2x10 20P` | série DK920A-20M; recebe o cartucho. Soldado na PCB principal. Ver Cartuchos |
+
+
+
+**Itens selecionados para o carrinho (preços informados em 02/11/2026; compra não confirmada):** microSD SPI R$ 4,11; INMP441 R$ 13,89; MAX98357A R$ 5,99; alto-falante 2030 8 Ω/2 W R$ 7,44; conjunto IR TX/RX R$ 6,99; PN532 V3 R$ 17,20; placa ESP32-P4+C6 R$ 116,91; bateria 1S 4.000 mAh R$ 59,48. **Subtotal informado: R$ 232,01, sem frete.** O subtotal não inclui cartão microSD, jumpers, resistores, capacitores, chave, botões adicionais, fio, soquete card edge ou fabricação da PCB.
 
 **Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
@@ -460,7 +462,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
      menu e botões antes de as peças chegarem. Não tem modelo de CC1101.
    - Reduzir risco: 1ª versão da placa com a DevKitC encaixada por pinos (não o módulo ESP32
      soldado); se o roteamento tiver erro, perde-se só a placa e a DevKit se reaproveita.
-3. Projetar a PCB no EasyEDA: núcleo + **carga/BMS/boost SMD** + **card edge** do conector.
+3. Projetar a PCB no EasyEDA: núcleo P4+C6 + periféricos + **carga/BMS/boost SMD** + **card edge** do conector.
    Cotar e fabricar na JLCPCB.
 4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
 5. Firmware: Bruce (base), rosto do BMO na tela, retrogames no cartão SD.
