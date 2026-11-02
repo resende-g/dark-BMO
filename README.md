@@ -127,7 +127,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Se a bateria não tiver o terceiro fio, um NTC avulso serve: 10 kΩ (marcado "103"), constante B compatível com o datasheet do carregador (3435 ou 3950), colado na célula com fita kapton, sem criar ponto de pressão. O usuário já tem um sensor de temperatura: confirmar se é NTC analógico (serve) ou digital tipo DS18B20/DHT11 (não serve para o pino TS do carregador). Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
 | Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
 | Analógicos (sticks de PS3) | 2 | reaproveitar | **Tirar do controle genérico de PS3 que o usuário já tem** (sem compra). Cada stick tem 2 potenciômetros (X/Y) e o clique L3/R3. Ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados) |
-| Gatilhos de ombro (L/R) | 2–4 | estoque próprio | Botões tácteis em **ângulo reto** com tampas impressas em grafite, como nos portáteis de emulação. Conferir se há modelos de ângulo reto no estoque; se não, comprar. As alavancas do controle de PS3 ficam guardadas para a v1 |
+| Gatilhos de ombro (L/R) | 2–4 | estoque próprio | Botões tácteis em **ângulo reto**, como nos portáteis de emulação. Conferir se há modelos de ângulo reto no estoque; se não, comprar. Tampas: as do L1/R1 do controle de PS3 ou impressas em grafite; alavancas do L2/R2 se couberem (ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados)) |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
@@ -293,8 +293,22 @@ Decidido em 02/11/2026: os dois analógicos saem de um controle genérico de PS3
 - **Gatilhos:** no controle genérico, o gatilho costuma ser uma alavanca que aperta borracha
   condutiva sobre uma trilha da placa do controle, então a parte elétrica não serve. Se houver
   um potenciômetro no pivô do L2/R2, ele é analógico e serve como os sticks (1 canal de ADC
-  cada, disputado). Na v0, usar botões tácteis de ângulo reto com tampas impressas; guardar as
-  alavancas para a v1.
+  cada, disputado). A parte plástica serve:
+  - **L1/R1:** a tampa plástica pode apertar um botão táctil de ângulo reto já na v0.
+  - **L2/R2:** a alavanca, a mola e o pino do pivô servem se a carcaça tiver o apoio do pivô
+    impresso e um botão táctil embaixo. Medir antes: elas foram desenhadas para um controle
+    horizontal e podem ser grandes demais para o topo do corpo vertical. Se não couberem na v0,
+    usar tampas impressas e guardar as alavancas para a v1.
+- **Tampas dos botões de ação e D-pad:** servem como tampa por cima de botões tácteis de
+  6 × 6 mm. Imprimir um espaçador embaixo de cada uma (elas foram feitas para afundar membrana,
+  não para apertar botão táctil). O furo da carcaça sai das medidas de paquímetro do corpo e
+  da aba, com folga de ~0,2–0,3 mm. D-pad de peça única: imprimir o apoio do pino central e pôr
+  4 botões tácteis sob as pontas; setas separadas viram tampas independentes. **Os símbolos
+  △ ○ × □ coloridos vão contra a spec (botões monocromáticos) e são marca da Sony:** lixar e
+  pintar de grafite, ou usar as tampas só como molde de medida e imprimir as próprias.
+- **Botão redondo "P3":** pode virar o botão de energia, com o topo lixado e liso.
+- **Não servem:** a placa com as membranas, as borrachas condutivas, o mini-USB e a carcaça do
+  controle.
 - **Extra:** os motores de vibração do controle podem servir para vibração no futuro
   (precisam de transistor para acionar). Os botões de membrana do controle não servem.
 
