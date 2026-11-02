@@ -1,16 +1,19 @@
 # Prompts dos cartuchos (geração de imagem)
 
-Prompts usados para gerar as etiquetas conceito dos cartuchos do BMO no Gemini. A ideia é
+Prompts usados para gerar as etiquetas conceito dos cartuchos do d-BMO no Gemini. A ideia é
 que cada cartucho pareça um **jogo de videogame antigo**: etiqueta em pixel art, com um
 **nome que funciona como título de jogo** e codifica a função do cartucho (nada de logo de
-marca). Todos mantêm a mesma família visual: carcaça **teal**, borda de **contatos dourados**
-(card edge) embaixo, foto de produto com fundo off-white.
+marca). Todos mantêm a mesma família visual: carcaça **grafite** com detalhes **prata**, borda de
+**contatos dourados** (card edge) embaixo, foto de produto com fundo off-white.
+
+> As imagens atuais ainda estão no visual antigo (teal) e precisam ser geradas de novo com os
+> prompts abaixo, já atualizados.
 
 Visão geral e especificação técnica do cartucho estão no [README](../README.md#especificação-do-cartucho-card-edge).
 
 | Cartucho | Função | Nome (título de jogo) | Imagem |
 |---|---|---|---|
-| LoRa | Rádio de longo alcance, 915 MHz (comunicação entre dois BMOs) | WAVE RIDER | [`cartucho-wave-rider.jpg`](img/cartucho-wave-rider.jpg) |
+| LoRa | Rádio de longo alcance, 915 MHz (comunicação entre dois d-BMOs) | WAVE RIDER | [`cartucho-wave-rider.jpg`](img/cartucho-wave-rider.jpg) |
 | Câmera | Visão para o modo agente (um "corpo para o Claude" via API) | EAGLE EYE | [`cartucho-eagle-eye.jpg`](img/cartucho-eagle-eye.jpg) |
 
 > Dica: para manter a família idêntica, anexe no Gemini uma das imagens já geradas como
@@ -23,8 +26,8 @@ Visão geral e especificação técnica do cartucho estão no [README](../README
 ```
 Fotografia de produto de um cartucho de videogame retrô feito em casa, membro de uma
 família de cartuchos. Corpo em plástico impresso em 3D (FDM), com as linhas de camada
-visíveis, na cor TEAL (verde-água), formato de retângulo com cantos arredondados, do
-tamanho aproximado de um cartucho de Game Boy. Na borda INFERIOR, uma fileira de
+visíveis, na cor GRAFITE (#24272B) com detalhes em prata (#AEB3B8), formato de retângulo com cantos arredondados, com
+52 × 52 mm. Na borda INFERIOR, uma fileira de
 contatos dourados tipo "card edge" (gold fingers), como a borda de uma placa de
 circuito. No TOPO do cartucho, uma pequena ANTENA HELICOIDAL de mola, preta.
 
@@ -50,15 +53,15 @@ não traz o logo.
 
 ## EAGLE EYE — cartucho câmera (visão para o modo agente)
 
-Lente de câmera real no **centro da frente**, apontada para a frente (para quem o BMO olha).
+Lente de câmera real no **centro da frente**, apontada para a frente (para quem o d-BMO olha).
 O módulo (ex. OV2640) fica virado para fora, no lado oposto aos contatos, e a carcaça do
 cartucho precisa de um furo redondo para a lente na face frontal.
 
 ```
 Fotografia de produto de um cartucho de videogame retrô feito em casa, membro da mesma
 família de cartuchos (mesma identidade visual). Corpo em plástico impresso em 3D (FDM),
-com linhas de camada visíveis, na cor TEAL (verde-água), retângulo de cantos
-arredondados, tamanho de cartucho de Game Boy. Na borda INFERIOR, uma fileira de
+com linhas de camada visíveis, na cor GRAFITE (#24272B) com detalhes em prata (#AEB3B8), retângulo de cantos
+arredondados, com 52 × 52 mm. Na borda INFERIOR, uma fileira de
 contatos dourados tipo "card edge" (gold fingers).
 
 No CENTRO da FRENTE do cartucho, embutida na própria etiqueta, há uma LENTE DE CÂMERA
