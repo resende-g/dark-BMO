@@ -111,7 +111,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Item | Qtd | Termo de busca | Situação / observação |
 |---|---:|---|---|
 | Placa principal ESP32-P4 + ESP32-C6 | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91; compra não confirmada. Substitui o ESP32-S3 na arquitetura final. Conferir modelo, pinout, PHY Ethernet e ligação P4-C6 antes da PCB |
-| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (MSP3217). A unidade comprada veio na versão touch (MSP3218, 14 pinos, XPT2046 + caneta): funciona igual, com os pinos T_* sem ligação no v1. Tela ÚNICA: rosto do BMO + menu + status |
+| TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | Já comprada e validada (MSP3218 touch); pinos T_* sem ligação no v1. Tela única: rosto + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
 | Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | Selecionado; R$ 6,99; compra não confirmada. Confirmar componentes e pinagem do conjunto |
