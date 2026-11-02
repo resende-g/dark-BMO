@@ -119,19 +119,19 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | Selecionado; R$ 7,44; compra não confirmada; conferir dimensões e cavidade acústica |
 | Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
 | Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
-| Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | Ainda falta colocar no carrinho; preferir cartão legítimo, formatar FAT32 |
+| Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
-| Botões tácteis 6×6 | kit | `tactile button 6x6 kit` | Ainda falta completar D-pad e ações; já existem 3 botões testados, então comprar kit/lote conforme quantidade final |
-| Chave SPST slide mini | 1 | `SPST slide switch mini` | Ainda falta colocar no carrinho; liga/desliga |
+| Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem |
+| Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
-| Jumpers Dupont (F-F, M-M e M-F) | kit | `Dupont jumper wire kit female-female male-male male-female` | Ainda falta; prioridade imediata: jumpers fêmea-fêmea para testar o CC1101. Demais tipos para bancada |
+| Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | Selecionado; R$ 15,78; compra não confirmada. Inclui os três tipos; prioridade imediata: F-F para testar CC1101 |
 | Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Ainda falta colocar no carrinho; fiação fina e protótipos |
-| Soquete card edge 2,54 mm 20P | 1 (lote 5) | `DK920A-20M 20 pin card edge connector` | Ainda falta comprar; confirmar dimensões da peça real antes da pegada da PCB. Recebe o cartucho |
+| Conector/soquete card edge 2,54 mm, 20/34 pinos | 2 peças | `CE 225F 2.54mm 20 34 pin card edge slot connector` | Selecionado; R$ 15,07; compra não confirmada. Confirmar se são duas unidades/versões 20P e 34P, espessura da placa inserida, largura, altura e desenho mecânico; não fechar footprint da PCB antes de medir o componente real |
 
 
 
-**Itens selecionados para o carrinho (preços informados em 02/11/2026; compra não confirmada):** microSD SPI R$ 4,11; INMP441 R$ 13,89; MAX98357A R$ 5,99; alto-falante 2030 8 Ω/2 W R$ 7,44; conjunto IR TX/RX R$ 6,99; PN532 V3 R$ 17,20; placa ESP32-P4+C6 R$ 116,91; bateria 1S 4.000 mAh R$ 59,48. **Subtotal informado: R$ 232,01, sem frete.** O subtotal não inclui cartão microSD, jumpers, resistores, capacitores, chave, botões adicionais, fio, soquete card edge ou fabricação da PCB.
+**Itens selecionados para o carrinho (preços informados em 02/11/2026; compra não confirmada):** módulo microSD SPI R$ 4,11; INMP441 R$ 13,89; MAX98357A R$ 5,99; alto-falante 2030 8 Ω/2 W R$ 7,44; conjunto IR TX/RX R$ 6,99; PN532 V3 R$ 17,20; placa ESP32-P4+C6 R$ 116,91; bateria 1S 4.000 mAh R$ 59,48; conector card edge 20/34P R$ 15,07; kit 40 jumpers Dupont R$ 15,78. **Subtotal atualizado: R$ 262,86, sem frete.** O usuário já possui cartão microSD ADATA e botões; não incluir esses itens no carrinho. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. O subtotal não inclui resistores, capacitores, fio, PCB ou fabricação.
 
 **Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
@@ -175,11 +175,11 @@ Todo o caminho de energia (carga da LiPo por USB-C, proteção/BMS de 1 célula 
 fica **desenhado na própria PCB** com componentes SMD, em vez de módulos avulsos. Fluxo lógico:
 
 ```
-USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [chave] → boost 5V (SMD)
+USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [power-latch comandado por botão] → boost 5V (SMD)
    → alimentação da placa P4+C6 e MAX98357A conforme esquemático → 3,3V regulados para os módulos
 ```
 
-- Carga, proteção e boost são **CIs SMD na placa** (minúsculos, soldados de fábrica pela JLCPCB).
+- Carga, proteção, boost e circuito de power-latch/gerenciamento do botão são **componentes SMD na placa** (definir topologia e CI no esquemático).
 - Projeto do circuito de energia no EasyEDA, com orientação do Tiago Batista.
 - Continua valendo: 5V para MAX98357A, 3,3V para o resto, nunca expor a bateria crua.
 - **Limitar a corrente de carga.** A bateria LiPo 1S é pequena; 1 A (padrão dos módulos de
