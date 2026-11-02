@@ -77,8 +77,8 @@ São dois Tiagos distintos: **Batista** cuida da PCB; **Efraim** imprime e monta
 
 O projeto foi dividido em dois, cada um com o hardware certo para o seu propósito:
 
-### BMO v1 (este repositório) — ESP32-S3
-Jogos retrô + ataques simples de RF / NFC / IR. **Sem teclado QWERTY.** Entrada por
+### BMO v1 (este repositório) — ESP32-P4 + ESP32-C6
+Jogos retrô + testes de RF / NFC / IR. **Sem teclado QWERTY.** Entrada por
 **botões tácteis + D-pad** (estilo controle de videogame), o que aproxima o visual do
 personagem (tela grande em cima, botões coloridos embaixo) e simplifica muito a montagem.
 
@@ -141,10 +141,12 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 ## Arquitetura
 
+**Plataforma principal definida: ESP32-P4 + ESP32-C6.** A placa selecionada substitui o ESP32-S3 na arquitetura final. A função exata de cada chip, o barramento de comunicação entre eles, a pinagem disponível e os recursos da placa devem ser confirmados no esquemático do modelo adquirido. O diagrama abaixo é conceitual, não constitui pinout.
+
 ```
                         ┌───────────────────┐
-                        │   ESP32-S3 N16R8   │
-                        │  (WiFi + BT nativo)│
+                        │    ESP32-P4        │
+                        │  + ESP32-C6        │
                         └─────────┬─────────┘
            ┌──────────────┬───────┼────────┬──────────────┐
           SPI            I²C      I2S      GPIO          USB
@@ -161,41 +163,9 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 ---
 
-## Pinagem (ESP32-S3 N16R8)
+## Pinagem (ESP32-P4 + ESP32-C6)
 
-Tela e botões já testados na bancada; o resto é proposta. Conferir contra a serigrafia da placa.
-No Bruce, os pinos da tela, dos botões e do CC1101 são fixados na compilação
-(`firmware/bruce/bmo.ini`); só os pinos de IR e de RF de um fio dá para trocar pelo menu.
-
-| Função | GPIO | Nota |
-|---|---:|---|
-| I²C SDA | 8 | pull-up 4,7k |
-| I²C SCL | 9 | pull-up 4,7k |
-| SPI SCK | 12 | compartilhado |
-| SPI MOSI | 11 | compartilhado |
-| SPI MISO | 13 | compartilhado |
-| CS Display | 10 | |
-| CS CC1101 | 14 | |
-| CS MicroSD | 21 | |
-| Display DC | 17 | |
-| Display RES | 18 | |
-| Display BLK | 16 | backlight (3,3V fixo ou PWM) |
-| CC1101 GDO0 | 15 | interrupção RF |
-| IR RX (KY-022) | 4 | |
-| IR TX (KY-005) | 5 | |
-| I²S BCLK | 40 | áudio |
-| I²S LRC | 41 | áudio |
-| I²S DOUT (speaker) | 42 | amp em 5V |
-| I²S SD IN (mic) | 6 | mic em 3,3V, L/R no GND |
-| VBAT sense | 1 | divisor 100k/100k, ×2 no firmware |
-| Botão BOOT/power | 0 | strapping |
-| Botão cima | 39 | botões ligam o GPIO ao GND (pull-up interno) |
-| Botão OK | 2 | GPIO RTC: é o que acorda do deep sleep |
-| Botão baixo | 47 | cima + baixo juntos = voltar, no Bruce |
-| Mais botões (D-pad completo) | 7, … | evitar 38 e 48: um deles é o LED RGB da DevKitC, conforme a revisão |
-
-**Não usar:** GPIO 26–37 (flash/PSRAM octal), 19/20 (USB nativo), 43/44 (UART0).
-Cuidado com strapping: 3, 45, 46.
+**Pendente de definição.** A tabela de GPIOs do ESP32-S3 foi removida porque não pode ser reaproveitada na nova plataforma. Antes de congelar a PCB, obter o esquemático e o pinout exatos da placa selecionada; identificar os GPIOs acessíveis em cada chip e a interface de comunicação P4-C6; reservar sinais para display, CC1101, PN532, microSD, I²S, IR, botões, leitura da bateria e USB. Não copiar GPIOs nem configurações do arquivo `firmware/bruce/bmo.ini` sem validação.
 
 ---
 
@@ -206,7 +176,7 @@ fica **desenhado na própria PCB** com componentes SMD, em vez de módulos avuls
 
 ```
 USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [chave] → boost 5V (SMD)
-   → 5V para o ESP32 e MAX98357A → regulador onboard do ESP32 → 3,3V para os demais módulos
+   → alimentação da placa P4+C6 e MAX98357A conforme esquemático → 3,3V regulados para os módulos
 ```
 
 - Carga, proteção e boost são **CIs SMD na placa** (minúsculos, soldados de fábrica pela JLCPCB).
@@ -237,11 +207,8 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 ## Configurações críticas
 
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
-- **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`. Com o cabo na
-  porta USB nativa, também `USB CDC On Boot: Enabled` (senão o serial fica mudo).
-- **Bruce**: build próprio do BMO em `firmware/bruce/` (`build.sh`). O PlatformIO tem que rodar
-  num venv com Python 3.10 a 3.14 (o do Homebrew vem mais novo), e no ESP32-S3 a tela exige
-  `USE_HSPI_PORT`, senão o Bruce trava no boot.
+- **ESP32-P4 + ESP32-C6:** selecionar o alvo/board package correspondente ao modelo exato da placa. Verificar suporte do Arduino-ESP32 e avaliar ESP-IDF para os recursos avançados do P4. Não reutilizar configurações específicas do ESP32-S3 sem validação.
+- **Bruce:** o build existente em `firmware/bruce/` foi feito para ESP32-S3. A migração para ESP32-P4+C6 depende de confirmar suporte do projeto upstream, drivers e periféricos; pode exigir portabilidade significativa. Não considerar o firmware atual compatível até compilar e testar na placa nova.
 - **Display**: driver ILI9341 (tela única).
 - **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
@@ -435,7 +402,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 | Peça | Medida |
 |---|---|
 | Tela principal (placa) | 89,3 × 55,04 mm (datasheet; na régua deu 88 × 54); vidro visível ~70 × 51 mm (régua); área ativa 64,8 × 48,6 mm (datasheet) |
-| Bateria alvo | ~6 mm de espessura, 2000 mAh |
+| Bateria selecionada | dimensões anunciadas 0,4 × 70 × 115 mm; confirmar unidade e medida real |
 | Cartucho (PCB) | 52 × 52 mm, 1,6 mm; língua ~27,8 mm |
 | Soquete DK920A-20M (corpo) | 31,7 × 9,2 mm, altura ~10,2 mm; fileiras a 5,08 mm; fenda 1,9 mm |
 
@@ -474,8 +441,9 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 ## Roadmap
 
 - [ ] Fechar entrada (D-pad + botões vs analógico)
-- [x] Bancada: DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e
-  Bruce rodando com 3 botões
+- [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
+- [ ] Validar a placa ESP32-P4+C6 selecionada e definir nova pinagem
+- [ ] Verificar suporte/portar Bruce e Retro-Go para ESP32-P4+C6
 - [ ] CC1101 na bancada (`teste_cc1101` e captura de 433 MHz no Bruce): faltam jumpers fêmea
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
