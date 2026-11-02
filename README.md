@@ -114,7 +114,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Item | Qtd | Termo de busca | Situação / observação |
 |---|---:|---|---|
 | Placa de desenvolvimento Guition JC-ESP32P4-M3-DEV | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91 (variação "ESP32-P4-Module", sem caixa de acrílico); compra não confirmada. Módulo JC-ESP32P4-M3 (ESP32-P4NRW32, 32 MB PSRAM, 16 MB flash, ESP32-C6 por SDIO), slot microSD físico, 3× USB-C, RJ45, 2× FPC MIPI, header 2×13 e vários JST. 92 × 62 mm. Serve para a bancada e para a carcaça v0; na PCB final, usar só o módulo M3. **Esquemático, pinout do header e footprint do módulo pedidos ao vendedor** |
-| Antena 2,4 GHz IPEX/U.FL (MHF1) | 1 | `2.4GHz IPEX antenna FPC` | Falta comprar. Obrigatória para o WiFi/BLE do C6: o módulo M3 tem conector IPEX, não antena de trilha. A antena SMA do CC1101 é de 433 MHz e **não serve**. Nunca transmitir sem antena. Conferir MHF1 (U.FL) vs MHF4 no conector do módulo |
+| Antena 2,4 GHz IPEX/U.FL (MHF1) | 1 | `2.4GHz IPEX antenna FPC` | Falta comprar. Obrigatória para o WiFi/BLE do C6: o módulo M3 tem conector IPEX, não antena de trilha. A antena SMA do CC1101 é de 433 MHz e **não serve**. Nunca transmitir sem antena. Conferir MHF1 (U.FL) vs MHF4 no conector do módulo. **Recomendada: antena T 2 dBi IPX1 interna** (do tipo usado em receptor ELRS), que vai direto no módulo, sem furo na carcaça. A dobrável de 3 dBi com pigtail U.FL→SMA exigiria um segundo furo SMA no topo e criaria o risco de trocar com a antena de 433 MHz do CC1101. Instalar com os braços do T abertos e retos, perto de uma borda superior, longe da bateria, do ímã do alto-falante e de metal |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | Já comprada e validada (MSP3218 touch); pinos T_* sem ligação no v1. Tela única: rosto + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
@@ -124,9 +124,10 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
 | ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** A placa DEV tem slot microSD físico e o P4 tem SDIO nativo, mais rápido. Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. Na PCB final, slot microSD por SDIO |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
-| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
+| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Se a bateria não tiver o terceiro fio, um NTC avulso serve: 10 kΩ (marcado "103"), constante B compatível com o datasheet do carregador (3435 ou 3950), colado na célula com fita kapton, sem criar ponto de pressão. O usuário já tem um sensor de temperatura: confirmar se é NTC analógico (serve) ou digital tipo DS18B20/DHT11 (não serve para o pino TS do carregador). Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
 | Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
-| Analógicos (sticks de PS3) | 2 | `PS3 analog joystick 3D thumbstick` | Origem a confirmar (reaproveitar de controle ou comprar). 2 eixos cada, lidos pelo ADC do P4; confirmar tensão e se o clique do stick será usado |
+| Analógicos (sticks de PS3) | 2 | reaproveitar | **Tirar do controle genérico de PS3 que o usuário já tem** (sem compra). Cada stick tem 2 potenciômetros (X/Y) e o clique L3/R3. Ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados) |
+| Gatilhos de ombro (L/R) | 2–4 | estoque próprio | Botões tácteis em **ângulo reto** com tampas impressas em grafite, como nos portáteis de emulação. Conferir se há modelos de ângulo reto no estoque; se não, comprar. As alavancas do controle de PS3 ficam guardadas para a v1 |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
@@ -153,7 +154,7 @@ bateria, analógicos), então só é modelada depois da Fase 2.
 | Fase | Comprar | Custo aproximado | O que destrava |
 |---|---|---:|---|
 | 1. Núcleo | Placa JC-ESP32P4-M3-DEV, jumpers, antena 2,4 GHz IPEX | ~R$ 140 (Choice) + imposto | Rosto e menu na tela (já comprada), CC1101 (já recebido), WiFi/BLE, microSD (cartão já disponível) e botões (estoque). Firmware por meses. Pedir o esquemático e contar GPIOs e canais de ADC livres |
-| 2. Volume | 2 analógicos; bateria com PCM + NTC | ~R$ 60 + analógicos | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. A carga da v0 depende do esquemático da DEV (se tiver conector de bateria e carregador, usar o dela; se não, a v0 roda pela USB até a Fase 5) |
+| 2. Volume | Bateria com PCM + NTC; tirar os analógicos do controle de PS3 (sem compra) | ~R$ 60 | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. A carga da v0 depende do esquemático da DEV (se tiver conector de bateria e carregador, usar o dela; se não, a v0 roda pela USB até a Fase 5) |
 | 3. Periféricos | PN532, IR, MAX98357A, alto-falante, INMP441 | ~R$ 52 (buscar Choice) | NFC, IR e áudio, cada um no espaço já reservado na v0 |
 | 4. Cartuchos | Soquete card edge | ~R$ 15 | Cartucho no topo; até lá, a fenda fica com tampa cega |
 | 5. Definitivo | PCB própria na JLCPCB (carga/BMS/boost SMD, riser do card edge, módulo M3) | ~R$ 100 por 5 placas + montagem, frete e imposto | Carcaça v1 em volta da PCB definitiva |
@@ -270,6 +271,32 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 - **Display**: driver ILI9341 (tela única).
 - **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
+
+### Analógicos e gatilhos reaproveitados
+
+Decidido em 02/11/2026: os dois analógicos saem de um controle genérico de PS3 que o usuário já tem.
+
+- **Ao abrir o controle:** se houver bateria interna, desconectar primeiro e não perfurar. Não
+  reaproveitar essa bateria no d-BMO (estado desconhecido).
+- **Retirada:** cada stick tem ~10 pinos e abas de fixação grossas. Dessoldar com fluxo, solda
+  nova e bomba ou malha. Alternativa mais segura: cortar a placa do controle em volta do stick
+  com micro retífica e soldar fios no pedaço (fica um pouco maior).
+- **Teste antes de usar:** medir a resistência entre as pontas de cada potenciômetro (costuma
+  ser 10 kΩ; genérico pode ser 5 kΩ) e conferir se o pino do meio varia suave, sem saltos
+  (sticks gastos têm drift).
+- **Ligação:** pontas em **3,3 V e GND, nunca 5 V**; pino do meio no ADC. 4 canais de ADC (2 por
+  stick) + 2 GPIOs opcionais para o clique. Confirmar no esquemático da DEV que sobram canais.
+- **Firmware:** calibrar o centro ao ligar, guardar mínimo/máximo e aplicar zona morta. Deixar
+  a calibração ajustável, porque potenciômetro barato muda com o tempo.
+- **Carcaça:** medir o stick já fora do controle (área e altura com a capa); essa medida entra
+  na espessura da v0.
+- **Gatilhos:** no controle genérico, o gatilho costuma ser uma alavanca que aperta borracha
+  condutiva sobre uma trilha da placa do controle, então a parte elétrica não serve. Se houver
+  um potenciômetro no pivô do L2/R2, ele é analógico e serve como os sticks (1 canal de ADC
+  cada, disputado). Na v0, usar botões tácteis de ângulo reto com tampas impressas; guardar as
+  alavancas para a v1.
+- **Extra:** os motores de vibração do controle podem servir para vibração no futuro
+  (precisam de transistor para acionar). Os botões de membrana do controle não servem.
 
 ---
 
@@ -527,7 +554,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [ ] Fase 1: comprar placa JC-ESP32P4-M3-DEV + jumpers + antena 2,4 GHz IPEX
 - [ ] Receber do vendedor o esquemático da DEV, o pinout do header e o datasheet/footprint do módulo M3
 - [ ] Validar a placa ESP32-P4+C6 selecionada e definir nova pinagem
-- [ ] Fase 2: comprar os analógicos e a bateria (PCM + NTC); modelar e imprimir a carcaça v0
+- [ ] Fase 2: tirar e testar os analógicos do controle de PS3; comprar a bateria (PCM + NTC); modelar e imprimir a carcaça v0
 - [ ] Decidir carregador (power-path), USB-C único vs OR com diodo ideal, e boost 5 V vs buck-boost 3,3 V
 - [ ] Validar o circuito de energia na bancada antes de fechar a PCB
 - [ ] Verificar suporte/portar Bruce e Retro-Go para ESP32-P4+C6
