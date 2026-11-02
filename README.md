@@ -42,7 +42,7 @@ soldar, entender barramentos e escrever firmware.
 - [Recursos](#recursos)
 - [Lista de componentes (BOM)](#lista-de-componentes-bom)
 - [Arquitetura](#arquitetura)
-- [Pinagem](#pinagem-esp32-s3-n16r8)
+- [Pinagem](#pinagem-esp32-p4--esp32-c6)
 - [Alimentação](#alimentação)
 - [Configurações críticas](#configurações-críticas)
 - [Firmware](#firmware)
@@ -112,7 +112,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 |---|---:|---|---|
 | Placa principal ESP32-P4 + ESP32-C6 | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91; compra não confirmada. Substitui o ESP32-S3 na arquitetura final. Conferir modelo, pinout, PHY Ethernet e ligação P4-C6 antes da PCB |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | sem touch (MSP3217). A unidade comprada veio na versão touch (MSP3218, 14 pinos, XPT2046 + caneta): funciona igual, com os pinos T_* sem ligação no v1. Tela ÚNICA: rosto do BMO + menu + status |
-| CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | sub-GHz |
+| CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
 | PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
 | Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | Selecionado; R$ 6,99; compra não confirmada. Confirmar componentes e pinagem do conjunto |
 | MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | Selecionado; R$ 5,99; compra não confirmada; alimentação conforme datasheet/módulo (projeto prevê 5 V) |
@@ -121,13 +121,13 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
 | Cartão microSD 32 GB | 1 | marca (SanDisk/Samsung/ADATA) | Ainda falta colocar no carrinho; preferir cartão legítimo, formatar FAT32 |
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
-| Botões tácteis 6×6 | vários | `tactile button 6x6 kit` | D-pad + ação (entrada do v1) |
-| Chave SPST slide mini | 1 | `SPST slide switch mini` | liga/desliga |
-| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | pull-up I²C, divisor de bateria |
-| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | desacoplamento |
-| Jumpers Dupont (M-M e M-F) | kit | `Dupont jumper wire kit` | protoboard |
-| Fio fino 30 AWG | 1 | `30 AWG silicone wire` | fiação fina |
-| Soquete card edge 2,54 mm 20P | 1 (lote 5) | `Edge Card Connector Slot 2.54mm 2x10 20P` | série DK920A-20M; recebe o cartucho. Soldado na PCB principal. Ver Cartuchos |
+| Botões tácteis 6×6 | kit | `tactile button 6x6 kit` | Ainda falta completar D-pad e ações; já existem 3 botões testados, então comprar kit/lote conforme quantidade final |
+| Chave SPST slide mini | 1 | `SPST slide switch mini` | Ainda falta colocar no carrinho; liga/desliga |
+| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
+| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
+| Jumpers Dupont (F-F, M-M e M-F) | kit | `Dupont jumper wire kit female-female male-male male-female` | Ainda falta; prioridade imediata: jumpers fêmea-fêmea para testar o CC1101. Demais tipos para bancada |
+| Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Ainda falta colocar no carrinho; fiação fina e protótipos |
+| Soquete card edge 2,54 mm 20P | 1 (lote 5) | `DK920A-20M 20 pin card edge connector` | Ainda falta comprar; confirmar dimensões da peça real antes da pegada da PCB. Recebe o cartucho |
 
 
 
@@ -417,18 +417,10 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 ## Montagem passo a passo
 
 1. Confirmar entrada do v1: só D-pad + botões, ou com analógico (sticks do controle PS3 no ADC).
-2. **Validação antes da PCB.** A simulação do EasyEDA é para circuitos analógicos: **não testa
-   microcontrolador nem SPI**, ou seja, não valida o núcleo ESP32-S3 + tela + CC1101 rodando o
-   Bruce (serve, no máximo, para o circuito de energia). Então:
-   - **Bancada (recomendado):** montar o núcleo na protoboard (DevKitC + tela + CC1101) e rodar
-     o Bruce de verdade antes de fabricar. Fecha uma pinagem já testada e evita placa com erro.
-     Teste do CC1101: ler o registrador de versão por SPI (confirma fiação/CS); capturar e
-     reenviar o sinal de um controle 433 MHz seu. Sketches de teste da bancada:
-     `firmware/teste_tela` e `firmware/teste_cc1101`.
-   - **Wokwi (grátis, online):** ESP32-S3 e ILI9341 são suportados — dá para adiantar rosto,
-     menu e botões antes de as peças chegarem. Não tem modelo de CC1101.
-   - Reduzir risco: 1ª versão da placa com a DevKitC encaixada por pinos (não o módulo ESP32
-     soldado); se o roteamento tiver erro, perde-se só a placa e a DevKit se reaproveita.
+2. **Validação antes da PCB.** A simulação do EasyEDA não valida firmware nem periféricos como um protótipo real. Como a plataforma mudou para ESP32-P4+C6, validar primeiro a placa exata, comunicação entre os chips, display, CC1101, PN532, microSD e áudio. Confirmar a disponibilidade/portabilidade de Bruce e Retro-Go; não presumir que firmwares do ESP32-S3 funcionem no P4.
+   - **Bancada:** testar a placa P4+C6 selecionada com a tela e CC1101; compilar firmware mínimo para a plataforma antes de congelar a pinagem.
+   - Teste do CC1101: ler o registrador de versão por SPI e testar captura/reenvio apenas em equipamento próprio/autorizado.
+   - Usar os sketches existentes como referência, adaptando alvos e pinos à nova plataforma.
 3. Projetar a PCB no EasyEDA: núcleo P4+C6 + periféricos + **carga/BMS/boost SMD** + **card edge** do conector.
    Cotar e fabricar na JLCPCB.
 4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
