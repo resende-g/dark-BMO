@@ -1,13 +1,13 @@
-# dark-bmo
+# dark-BMO — hardware do d-BMO
 
 <p align="center">
-  <img src="docs/img/bmo-capa-v1.jpg" alt="Conceito visual do BMO v1: corpo teal, tela no topo com rosto, D-pad amarelo, botões coloridos e o slot de cartucho (card edge) acima dos controles" width="640">
+  <img src="docs/img/dbmo-referencia-conceitual-v1.jpeg" alt="Referência conceitual do d-BMO: videogame portátil vertical prata, tela 4:3 com rosto em pixels vermelhos, D-pad e botões grafite, dois analógicos, apoiado num suporte inclinado" width="320">
   <br>
-  <sub>Conceito visual do BMO v1 (com o slot de cartucho card edge acima do D-pad).</sub>
+  <sub>Referência conceitual do personagem (gerada por IA, não é arte final). O corpo do hardware será desenhado a partir dela.</sub>
 </p>
 
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
-> Plataforma planejada: ESP32-P4 + ESP32-C6, com cara de BMO (Hora de Aventura). Jogos retrô + RF / NFC / IR.
+> Plataforma planejada: ESP32-P4 + ESP32-C6, com corpo de videogame portátil retrô. Jogos retrô + RF / NFC / IR.
 
 ![status](https://img.shields.io/badge/status-planejamento%20%2F%20montagem-yellow)
 ![plataforma](https://img.shields.io/badge/MCU-ESP32--P4%2BC6-blue)
@@ -17,14 +17,15 @@
 
 ## Sobre
 
-O **dark-bmo** (ou só BMO) é um aparelho de mão feito do zero para estudar segurança da
+O **dark-BMO** é o hardware do **d-BMO** (BE MORE DARK), um aparelho de mão feito do zero para estudar segurança da
 informação na prática: rádio sub-GHz, NFC, infravermelho, WiFi e Bluetooth. Nasceu do
 reaproveitamento de um mini teclado Rii i8 achado em casa e foi crescendo até virar um
 projeto completo de hardware + firmware.
 
-O nome e o visual são **inspirados** no personagem BMO de Hora de Aventura (ver
-[Aviso legal](#aviso-legal)): corpo teal, carinha fofa numa telinha, formato de
-computador-brinquedo.
+O visual segue a identidade do d-BMO, definida em
+[`resende-g/BMO`](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md):
+videogame portátil de emulação vertical, corpo prata, rosto em pixels vermelhos na tela,
+dois analógicos e nenhum membro (ver [Aviso legal](#aviso-legal)).
 
 É um projeto de aprendizado. O objetivo é tanto a ferramenta quanto o processo de montar,
 soldar, entender barramentos e escrever firmware.
@@ -46,7 +47,7 @@ soldar, entender barramentos e escrever firmware.
 - [Alimentação](#alimentação)
 - [Configurações críticas](#configurações-críticas)
 - [Firmware](#firmware)
-- [Rosto do BMO (tela principal)](#rosto-do-bmo-tela-principal)
+- [Rosto do d-BMO (tela principal)](#rosto-do-d-bmo-tela-principal)
 - [Carcaça 3D](#carcaça-3d)
 - [Montagem passo a passo](#montagem-passo-a-passo)
 - [Roadmap](#roadmap)
@@ -69,7 +70,7 @@ soldar, entender barramentos e escrever firmware.
 |---|---|
 | **Resende** (Gabriel) | Lead do projeto: arquitetura, firmware, compras, documentação |
 | **Tiago Batista** | Consultor de hardware: ensina EasyEDA e orienta o projeto da PCB para fabricar na JLCPCB (carga/BMS/card edge integrados). Também faz PCB caseira no laser, mas a decisão foi fábrica |
-| **Tiago Efraim** | Impressão 3D da carcaça e montagem; monta um BMO em par (candidato ao cartucho LoRa p/ comunicação entre os dois) |
+| **Tiago Efraim** | Impressão 3D da carcaça e montagem; monta um d-BMO em par (candidato ao cartucho LoRa p/ comunicação entre os dois) |
 
 São dois Tiagos distintos: **Batista** cuida da PCB; **Efraim** imprime e monta junto.
 
@@ -77,10 +78,11 @@ São dois Tiagos distintos: **Batista** cuida da PCB; **Efraim** imprime e monta
 
 O projeto foi dividido em dois, cada um com o hardware certo para o seu propósito:
 
-### BMO v1 (este repositório) — ESP32-P4 + ESP32-C6
-Jogos retrô + testes de RF / NFC / IR. **Sem teclado QWERTY.** Entrada por
-**botões tácteis + D-pad** (estilo controle de videogame), o que aproxima o visual do
-personagem (tela grande em cima, botões coloridos embaixo) e simplifica muito a montagem.
+### d-BMO v1 (este repositório) — ESP32-P4 + ESP32-C6
+Jogos retrô + testes de RF / NFC / IR. **Sem teclado QWERTY.** Entrada de videogame
+portátil: **D-pad, quatro botões de ação, select/start, gatilhos de ombro e dois
+analógicos** (sticks de controle de PS3 lidos pelo ADC). É o layout do personagem e
+simplifica a montagem em relação ao teclado.
 
 ### Projeto 2 (futuro) — Raspberry Pi + teclado Rii
 Kali Linux de verdade para pentest sério. O teclado QWERTY do Rii i8 vai para cá, onde
@@ -98,7 +100,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | WiFi 6 + Bluetooth/BLE | ESP32-C6 integrado à placa P4+C6 | a validar/portar |
 | Jogos retrô (NES, GB, GBC, SMS, GG, PCE) | ESP32-P4 + tela + microSD | avaliar portabilidade do Retro-Go |
 | Áudio (som + mic) | MAX98357A + speaker 8 Ω/2 W + INMP441 | firmware a desenvolver/validar |
-| Rosto animado do BMO | tela principal ILI9341 | custom |
+| Rosto animado do d-BMO | tela principal ILI9341 | custom |
 | Scripts / testes | — | MicroPython |
 
 ---
@@ -121,7 +123,8 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
-| Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem |
+| Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
+| Analógicos (sticks de PS3) | 2 | `PS3 analog joystick 3D thumbstick` | Origem a confirmar (reaproveitar de controle ou comprar). 2 eixos cada, lidos pelo ADC do P4; confirmar tensão e se o clique do stick será usado |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
 | Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
 | Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
@@ -159,7 +162,8 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 - **SPI** (SCK/MOSI/MISO compartilhados, cada um com seu CS): Display, CC1101, MicroSD.
 - **I²C** (SDA/SCL): PN532 (0x24). (Tela única; sem OLED secundário.)
 - **I²S**: MAX98357A (saída) + INMP441 (entrada), mesmo barramento.
-- **GPIO direto**: IR RX/TX, botões/D-pad, leitura de bateria.
+- **GPIO direto**: IR RX/TX, botões/D-pad.
+- **ADC**: 2 analógicos (4 eixos) e leitura de bateria. Confirmar quantos canais ADC livres a placa P4+C6 expõe.
 
 ---
 
@@ -195,7 +199,7 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 - **Só energia.** Os pinos de dados (D+/D−) ficam desligados nessa porta; ela entra no circuito
   de carga.
 - **Dois resistores de 5,1 kΩ, um em cada pino CC (CC1→GND, CC2→GND), separados.** Sem eles,
-  um carregador com cabo C-C entrega 0 V e o BMO não carrega. Ligar os dois CC num resistor só
+  um carregador com cabo C-C entrega 0 V e o d-BMO não carrega. Ligar os dois CC num resistor só
   é erro clássico. Só com os resistores, a carga é a padrão de ~500 mA (mais corrente exige um
   CI de carga que negocie com o carregador).
 - **A cor fica na carcaça, não no conector** (não há USB-C com isolador colorido à venda):
@@ -221,10 +225,10 @@ Um firmware por vez (como "cartuchos de software"):
 
 | Firmware | Uso |
 |---|---|
-| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Build próprio do BMO (versão 1.16.1, tela ILI9341 + 3 botões + CC1101) em `firmware/bruce/`: o binário oficial da DevKitC não tem tela |
+| **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Build próprio do d-BMO (versão 1.16.1, tela ILI9341 + 3 botões + CC1101) em `firmware/bruce/`: o binário oficial da DevKitC não tem tela |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
-| **Modo agente** (futuro) | BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
+| **Modo agente** (futuro) | d-BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
 
 No Bruce, a leitura dos 3 botões já está em `firmware/bruce/interface.cpp`. Falta o D-pad
 completo e o input do emulador.
@@ -236,29 +240,42 @@ firmware/bruce/build.sh "" upload       # compila e grava pela USB
 
 ---
 
-## Rosto do BMO (tela principal)
+## Rosto do d-BMO (tela principal)
 
-O BMO tem **uma tela só** (ILI9341 3,2" colorida). Ela mostra o **rosto animado do BMO**
+O d-BMO tem **uma tela só** (ILI9341 3,2" colorida). Ela mostra o **rosto animado do d-BMO**
 quando ocioso (olhos piscam, boca reage), o **menu/terminal** quando em uso, e indicadores
 de **status** (bateria / sinal / atividade). Alterna conforme o estado do aparelho.
 
+Estilo: **blocos de pixel vermelho (#D92332) sobre fundo preto**, sem traços finos, conforme a
+[spec do personagem](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
 Recomendação de implementação: desenhar os rostos **por código** (ex. TFT_eSPI, com
-primitivas de círculo/retângulo/linha), não por bitmap, porque são formas geométricas
-simples e a animação fica leve e fluida. Mapear cada expressão a um estado do aparelho (ocioso,
-escaneando, sucesso, erro, bateria baixa). Há um SVG com 30 rostos do personagem como
-referência visual.
+retângulos numa grade fixa), não por bitmap, para a animação ficar leve. A spec prevê dez
+estados: `IDLE`, `THINKING`, `SCANNING`, `ANALYZING`, `SUCCESS`, `ALERT`, `ERROR`,
+`PROTECTING`, `CURIOUS` e `OFFLINE`. Não usar rostos de personagens existentes como referência.
 
 ---
 
 ## Carcaça 3D
 
-- Corpo retangular **teal**, impresso em 3D (FDM), com duas perninhas (estilo BMO em pé).
-- **Layout v1** (aproxima do personagem): tela grande colorida no **topo**; abaixo, controles
-  de videogame coloridos (D-pad amarelo, botões azul/verde/vermelho). **Sem teclado.**
+- Corpo vertical de cantos arredondados, impresso em 3D (FDM), na paleta do d-BMO: **prata**
+  no corpo, **grafite/preto** na moldura da tela, nos controles e nas junções, **vermelho**
+  só no rosto e em acentos pequenos. **Sem membros:** em repouso, fica num **suporte
+  inclinado grafite** separado.
+- **Layout:** tela no **topo** com moldura preta; abaixo, D-pad à esquerda e quatro botões de
+  ação em losango à direita (grafite ou prata, nunca coloridos); select/start no centro;
+  **dois analógicos** embaixo, um de cada lado; grade do speaker entre eles; gatilhos de
+  ombro no topo. **Sem teclado.**
 - **Uma tela só** (ILI9341) no topo, grande, para rosto + menu + status.
-- Faixa horizontal acima do D-pad: **conector de expansão** (I²C + 3V3 + GND + GPIO livre),
-  com polyfuse/resistor em série na alimentação (protege o ESP32 de curto no módulo plugado).
-  No desenho do personagem essa faixa é o slot/leitor do BMO, então um conector ali é fiel.
+- **Acabamento prata sem metal de verdade** na frente e atrás: PLA/PETG prata ou pintura. Corpo
+  metálico bloqueia o NFC e atenua sub-GHz/WiFi. Isso descarta a opção de usinar o corpo em
+  alumínio na JLCPCB, salvo com janelas plásticas sobre as antenas.
+- **Conector de expansão no topo:** o cartucho entra pela **borda superior**, paralelo ao
+  corpo, como nos portáteis clássicos. Não fica na face frontal. O conector expõe I²C + 3V3 +
+  GND + GPIO livre, com polyfuse/resistor em série na alimentação (protege o ESP32 de curto no
+  módulo plugado).
+  - Como o DK920A-20M é vertical (furo passante), ele vai numa **plaquinha riser**
+    perpendicular à PCB principal, no topo, ligada por barra de pinos ou conector placa-placa.
+    Alternativa: soquete card edge em ângulo reto, se existir em 2,54 mm com a mesma pinagem.
   - **Solução escolhida: card edge** (borda da PCB vira contato, estilo cartucho). Com a PCB
     indo para a JLCPCB (fábrica), a densidade deixa de ser problema e o **card edge COMPLETO**
     é viável: I²C + SPI + UART + 3V3 + 5V + GND + 2 GPIO (~13 a 15 contatos).
@@ -283,7 +300,8 @@ referência visual.
     Testar o encaixe hex num corpo de prova na impressão antes de fechar o design.
 - Demais parafusos de fechamento da carcaça também em **heat-set/standoff na traseira** (não na frente).
 - Ergonomia por chanfro/arredondamento das arestas inferiores, mantendo o corpo retangular.
-- Antena SMA no topo; antena do PN532 virada para fora sem metal atrás; LED + receptor IR na
+- Topo: cartucho (centro), antena SMA e furo do mic, distribuídos para não colidir com os
+  gatilhos de ombro. Antena do PN532 virada para fora sem metal atrás; LED + receptor IR na
   frente; grade do speaker no canto inferior; furo do mic no topo; 2× USB-C + chave numa
   lateral. (O microSD não fica na lateral: fica dentro da porta traseira, ver acima.)
 - Detalhes mecânicos precisos (recorte de botões, heat-sets, bosses) saem do **CAD**
@@ -315,11 +333,12 @@ os cartuchos possíveis:
 - **GPS** (via UART/I²C): georreferenciar capturas.
 - **Sensores e módulos** (via I²C): ambientais, telas pequenas, leitores, e os módulos prontos
   da M5Stack/Seeed.
-- **Cartuchos temáticos**: cada cartucho como uma "ferramenta" ou "jogo" físico, no espírito do
-  cartucho de videogame do BMO.
+- **Cartuchos temáticos**: cada cartucho como uma "ferramenta" ou "jogo" físico, no espírito dos
+  cartuchos de videogame.
 
-**Referências visuais (família de cartuchos):** mesma carcaça teal e mesma borda de contatos
-dourados; cada cartucho é uma "capa de jogo" em pixel art, com um nome que funciona como
+**Referências visuais (família de cartuchos):** carcaça grafite com detalhes prata e a mesma
+borda de contatos dourados. As imagens abaixo ainda são do visual antigo (teal) e serão
+geradas de novo; cada cartucho é uma "capa de jogo" em pixel art, com um nome que funciona como
 título de jogo antigo e codifica a função (sem logo de marca). Prompts em
 [docs/cartuchos-prompts.md](docs/cartuchos-prompts.md).
 
@@ -338,7 +357,7 @@ de **915 MHz** (Anatel: 902-907,5 e 915-928). 433 MHz é a faixa do CC1101 comum
 915 se/quando o cartucho LoRa for feito de verdade. "LoRa" é marca da Semtech (uso conceitual
 apenas, não comercial).
 
-Limite honesto: o card edge não torna o BMO mais rápido nem roda IA local; para um "cérebro
+Limite honesto: o card edge não torna o d-BMO mais rápido nem roda IA local; para um "cérebro
 extra" o cartucho precisaria do próprio processador (outro projeto). O uso mais valioso para o
 propósito de segurança é o **cartucho de rádio/sensor extra**.
 
@@ -354,11 +373,11 @@ O **card edge não vem pronto** em nenhum módulo. Um cartucho é montado de dua
    as trilhas ligam os pinos do módulo aos contatos certos da borda.
 
 ```
-[Módulo LoRa comprado] --soldado em--> [PCB-cartucho c/ card edge] --encaixa no--> [conector do BMO]
+[Módulo LoRa comprado] --soldado em--> [PCB-cartucho c/ card edge] --encaixa no--> [conector do d-BMO]
 ```
 
 Ou seja: **cartucho completo = módulo da função + PCB-cartucho com card edge**. O conector
-fêmea (a fenda que recebe o cartucho) fica no corpo do BMO. O AliExpress dá o cérebro do rádio;
+fêmea (a fenda que recebe o cartucho) fica no corpo do d-BMO. O AliExpress dá o cérebro do rádio;
 a PCB-cartucho (desenhada no EasyEDA, fabricada na JLCPCB) dá o corpo do cartucho.
 
 ### Especificação do cartucho (card edge)
@@ -385,16 +404,17 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - **Apoio mecânico:** o DK920A não tem abas de fixação; toda a força de encaixe cai nas 20
   soldas. A carcaça precisa de um apoio encostado no corpo do soquete.
 - **Pegada na PCB principal:** 2×10 furos (~1,0 mm), pitch 2,54 mm, 5,08 mm entre as fileiras;
-  contorno do corpo 31,7 × 9,2 mm; altura ~10,2 mm acima da placa (define a folga até a frente
-  da carcaça). Partir da pegada "20 PIN CARD EDGE CONNECTOR - 2.54MM (MALE)" da biblioteca EasyEDA.
+  contorno do corpo 31,7 × 9,2 mm; altura ~10,2 mm acima da placa (na riser, define a folga até
+  o topo da carcaça). Partir da pegada "20 PIN CARD EDGE CONNECTOR - 2.54MM (MALE)" da biblioteca EasyEDA.
 - **Reconhecimento (opcional):** uma EEPROM I²C pequena (ex. 24C02) em cada cartucho guarda o
-  "nome" dele, e o BMO identifica sozinho o que foi plugado — usa o I²C que já está no conector.
+  "nome" dele, e o d-BMO identifica sozinho o que foi plugado — usa o I²C que já está no conector.
 - **A confirmar na JLCPCB:** se ela chanfra uma língua com degraus (padrão de placa de memória,
   deve dar) e se o mínimo de 50 mm vale para os dois lados ou só largura (se for só largura, o
   cartucho pode ficar mais curto, ~52 × 25 mm, e sair menos para fora da frente).
 
 > Ponto em aberto (pede decisão): com cartucho de 52 × 52 mm o soquete prende só ~8–10 mm e
-> **~40 mm do cartucho ficam para fora da frente**, abaixo da tela. Alternativa: cartucho curto
+> **~40 mm do cartucho ficam para fora do topo**, competindo com a antena SMA, o furo do mic e
+> os gatilhos de ombro. Alternativa: cartucho curto
 > (52 × 25 mm) num painel destacável de 52 × 52 para ganhar o chanfro de fábrica — depende da
 > resposta da JLCPCB acima.
 
@@ -416,7 +436,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 
 ## Montagem passo a passo
 
-1. Confirmar entrada do v1: só D-pad + botões, ou com analógico (sticks do controle PS3 no ADC).
+1. Entrada do v1 definida: D-pad + botões + dois analógicos (sticks de PS3 no ADC).
 2. **Validação antes da PCB.** A simulação do EasyEDA não valida firmware nem periféricos como um protótipo real. Como a plataforma mudou para ESP32-P4+C6, validar primeiro a placa exata, comunicação entre os chips, display, CC1101, PN532, microSD e áudio. Confirmar a disponibilidade/portabilidade de Bruce e Retro-Go; não presumir que firmwares do ESP32-S3 funcionem no P4.
    - **Bancada:** testar a placa P4+C6 selecionada com a tela e CC1101; compilar firmware mínimo para a plataforma antes de congelar a pinagem.
    - Teste do CC1101: ler o registrador de versão por SPI e testar captura/reenvio apenas em equipamento próprio/autorizado.
@@ -424,7 +444,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 3. Projetar a PCB no EasyEDA: núcleo P4+C6 + periféricos + **carga/BMS/boost SMD** + **card edge** do conector.
    Cotar e fabricar na JLCPCB.
 4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
-5. Firmware: Bruce (base), rosto do BMO na tela, retrogames no cartão SD.
+5. Firmware: Bruce (base), rosto do d-BMO na tela, retrogames no cartão SD.
 6. Ligar botões/D-pad e integrar no input do firmware.
 7. Carcaça (impressão do Tiago Efraim ou JLCPCB) + bateria comprada pela medida.
 
@@ -432,7 +452,8 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 
 ## Roadmap
 
-- [ ] Fechar entrada (D-pad + botões vs analógico)
+- [x] Fechar entrada: D-pad + botões + dois analógicos (sticks de PS3 no ADC)
+- [ ] Projetar a riser do card edge no topo
 - [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
 - [ ] Validar a placa ESP32-P4+C6 selecionada e definir nova pinagem
 - [ ] Verificar suporte/portar Bruce e Retro-Go para ESP32-P4+C6
@@ -488,11 +509,14 @@ pelo uso é de quem monta e opera.
 
 ## Aviso legal
 
-BMO (Beemo) é um personagem de **Adventure Time**, propriedade da Cartoon Network / Warner
-Bros. Discovery. Este projeto é um trabalho de fã, **sem fins lucrativos**, apenas inspirado
-na estética do personagem. Não é afiliado, patrocinado nem endossado pelos detentores dos
-direitos. Não venda nem distribua comercialmente peças, carcaças ou imagens que reproduzam
-o personagem.
+O d-BMO é um personagem original: videogame portátil de emulação, prata, sem membros, com
+rosto em pixels vermelhos. A especificação, os elementos de distinção e os vedados estão em
+[`CHARACTER_SPECIFICATION.md`](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
+
+Até 2026-11-02, este repositório usava um visual inspirado no personagem BMO de *Adventure
+Time* (Cartoon Network / Warner Bros. Discovery). Esse visual foi abandonado, e as imagens
+antigas foram removidas da árvore atual. Este projeto não é afiliado, patrocinado nem
+endossado por esses detentores de direitos.
 
 ---
 
@@ -504,4 +528,4 @@ Código sob [MIT](LICENSE). Documentação sob
 ---
 
 *Projeto pessoal de aprendizado. Feito com ESP32, solda, impressão 3D, ajuda dos amigos e
-muita pesquisa. Be more.*
+muita pesquisa. BE MORE DARK.*
