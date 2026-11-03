@@ -7,10 +7,10 @@
 </p>
 
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
-> Plataforma planejada: ESP32-P4 + ESP32-C6, com corpo de videogame portátil retrô. Jogos retrô + RF / NFC / IR.
+> Plataforma: ESP32-S3 N16R8, com corpo de videogame portátil retrô. Jogos retrô + RF / NFC / IR.
 
 ![status](https://img.shields.io/badge/status-planejamento%20%2F%20montagem-yellow)
-![plataforma](https://img.shields.io/badge/MCU-ESP32--P4%2BC6-blue)
+![plataforma](https://img.shields.io/badge/MCU-ESP32--S3-blue)
 ![licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
 ---
@@ -42,8 +42,9 @@ soldar, entender barramentos e escrever firmware.
 - [Versões do projeto](#versões-do-projeto)
 - [Recursos](#recursos)
 - [Lista de componentes (BOM)](#lista-de-componentes-bom)
+- [Compras em fases](#compras-em-fases)
 - [Arquitetura](#arquitetura)
-- [Pinagem](#pinagem-esp32-p4--esp32-c6)
+- [Pinagem](#pinagem-esp32-s3-n16r8)
 - [Alimentação](#alimentação)
 - [Configurações críticas](#configurações-críticas)
 - [Firmware](#firmware)
@@ -60,7 +61,7 @@ soldar, entender barramentos e escrever firmware.
 
 ## Status
 
-**Bancada anterior:** ESP32-S3 DevKitC-1 N16R8, tela ILI9341 e 3 botões testados; CC1101 recebido, ainda sem teste por falta de jumpers fêmea. **Nova decisão arquitetural:** a placa principal será migrada para ESP32-P4 + ESP32-C6 (módulo/placa de desenvolvimento selecionado; compra não confirmada). A pinagem, o firmware e a PCB precisam ser redesenhados e validados para a nova plataforma. A compatibilidade direta do Bruce e do Retro-Go ainda precisa ser verificada/portada.
+**Bancada:** ESP32-S3 DevKitC-1 N16R8, tela ILI9341 e 3 botões testados, com o Bruce rodando; CC1101 recebido, ainda sem teste por falta de jumpers fêmea. **Plataforma confirmada em 02/11/2026: ESP32-S3 N16R8.** A migração para ESP32-P4 + ESP32-C6, registrada antes, foi **adiada para um d-BMO v2** (ver [Decisões de projeto](#decisões-de-projeto)): o Bruce não tem suporte à P4, as funções de WiFi bruto do Bruce não passam pelo ESP-Hosted padrão, o Retro-Go não tem alvo para P4 e a placa custaria R$ 116,91 + antena. A pinagem da S3 foi restaurada e ampliada (ver [Pinagem](#pinagem-esp32-s3-n16r8)).
 
 ---
 
@@ -78,7 +79,7 @@ São dois Tiagos distintos: **Batista** cuida da PCB; **Efraim** imprime e monta
 
 O projeto foi dividido em dois, cada um com o hardware certo para o seu propósito:
 
-### d-BMO v1 (este repositório) — ESP32-P4 + ESP32-C6
+### d-BMO v1 (este repositório) — ESP32-S3 N16R8
 Jogos retrô + testes de RF / NFC / IR. **Sem teclado QWERTY.** Entrada de videogame
 portátil: **D-pad, quatro botões de ação, select/start, gatilhos de ombro e dois
 analógicos** (sticks de controle de PS3 lidos pelo ADC). É o layout do personagem e
@@ -95,10 +96,10 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Recurso | Hardware | Firmware base |
 |---|---|---|
 | Sub-GHz 433 MHz | CC1101 + antena SMA | Bruce |
-| NFC 13,56 MHz | PN532 V3 (I²C) | a validar/portar |
-| Infravermelho (TX + RX) | conjunto transmissor + receptor 38 kHz | a validar/portar |
-| WiFi 6 + Bluetooth/BLE | ESP32-C6 integrado à placa P4+C6 | a validar/portar |
-| Jogos retrô (NES, GB, GBC, SMS, GG, PCE) | ESP32-P4 + tela + microSD | avaliar portabilidade do Retro-Go |
+| NFC 13,56 MHz | PN532 V3 (I²C) | Bruce |
+| Infravermelho (TX + RX) | conjunto transmissor + receptor 38 kHz | Bruce |
+| WiFi 4 + Bluetooth/BLE 5 | ESP32-S3 (rádio no próprio chip) | Bruce |
+| Jogos retrô (NES, GB, GBC, SMS, GG, PCE) | ESP32-S3 + tela + microSD | Retro-Go (criar o alvo da placa) |
 | Áudio (som + mic) | MAX98357A + speaker 8 Ω/2 W + INMP441 | firmware a desenvolver/validar |
 | Rosto animado do d-BMO | tela principal ILI9341 | custom |
 | Scripts / testes | — | MicroPython |
@@ -112,44 +113,70 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 | Item | Qtd | Termo de busca | Situação / observação |
 |---|---:|---|---|
-| Placa principal ESP32-P4 + ESP32-C6 | 1 | `ESP32-P4 ESP32-C6 32M PSRAM 16MB Flash` | Selecionada; R$ 116,91; compra não confirmada. Substitui o ESP32-S3 na arquitetura final. Conferir modelo, pinout, PHY Ethernet e ligação P4-C6 antes da PCB |
+| ESP32-S3 DevKitC-1 N16R8 | 1 | já disponível | **Placa principal** (16 MB flash, 8 MB PSRAM octal, WiFi + BLE no chip, antena de trilha). Já validada com tela, 3 botões e Bruce. Na PCB final, usar o módulo ESP32-S3-WROOM-1-N16R8 (conferir estoque na JLCPCB) |
+| MCP23017 (expansor de I/O I²C) | 1–2 | já disponível | O usuário tem 2 (iam para o Projeto 2). Um lê os 16 botões por I²C (0x20); o segundo (0x21) é opcional, para vibração e GPIOs do cartucho |
+| ~~Antena 2,4 GHz IPEX/U.FL~~ | 0 | — | **Não precisa com a S3**: a DevKitC e o WROOM-1 têm antena de trilha. Era exigência do módulo P4 (ver Decisões de projeto). Na carcaça, deixar a ponta da antena da S3 longe de metal, da bateria e do alto-falante. A antena SMA do CC1101 continua só para o CC1101 |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | Já comprada e validada (MSP3218 touch); pinos T_* sem ligação no v1. Tela única: rosto + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
-| PN532 V3 NFC | 1 | `PN532 NFC module V3` | Selecionado; R$ 17,20; compra não confirmada. DIP switch em I²C; endereço e compatibilidade a validar |
-| Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | Selecionado; R$ 6,99; compra não confirmada. Confirmar componentes e pinagem do conjunto |
-| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | Selecionado; R$ 5,99; compra não confirmada; alimentação conforme datasheet/módulo (projeto prevê 5 V) |
-| Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | Selecionado; R$ 7,44; compra não confirmada; conferir dimensões e cavidade acústica |
-| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
-| Módulo MicroSD SPI com conversor de nível | 1 | `Micro SD SPI TF card module level shifter` | Selecionado; R$ 4,11; compra não confirmada. Conferir alimentação e níveis lógicos; avaliar integração do slot diretamente na PCB |
+| PN532 V3 NFC | 1 | `PN532 NFC module V3` | **Comprado em 02/11/2026** (aguardando entrega): "PN532 Set", R$ 17,20. DIP switch em I²C; endereço e compatibilidade a validar |
+| Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | **Comprado em 02/11/2026** (aguardando entrega): "1set", R$ 7,03. Conferir que o conjunto traz TX e RX |
+| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | **Comprado em 02/11/2026** (aguardando entrega): variação "Small Chip Welding" (chip BGA, pinos soldados), R$ 8,36. Alimentado direto da bateria (2,5–5,5 V); pino SD no GPIO 3 |
+| Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | **Comprado em 02/11/2026** (aguardando entrega): R$ 7,44. Conferir dimensões e cavidade acústica |
+| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | **Comprado em 02/11/2026** (aguardando entrega): R$ 12,14. Captação de voz |
+| ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. **Usar o slot SD do módulo da tela**: o MSP3218 tem slot de **SD tamanho normal** no verso (confirmado em 02/11/2026), então o cartão microSD entra com o **adaptador microSD→SD**. Conferir se há chip buffer perto do slot (se houver, testar o SPI compartilhado). Na carcaça v0, o cartão fica atrás da tela, com troca rara. Na PCB final, slot microSD próprio na tampa traseira |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
-| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (confirmar unidade/medida real, capacidade, polaridade e proteção antes de projetar o berço e o circuito) |
+| Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Se a bateria não tiver o terceiro fio, um NTC avulso serve: 10 kΩ (marcado "103"), constante B compatível com o datasheet do carregador (3435 ou 3950), colado na célula com fita kapton, sem criar ponto de pressão. O usuário já tem um sensor de temperatura: confirmar se é NTC analógico (serve) ou digital tipo DS18B20/DHT11 (não serve para o pino TS do carregador). Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
 | Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
-| Analógicos (sticks de PS3) | 2 | `PS3 analog joystick 3D thumbstick` | Origem a confirmar (reaproveitar de controle ou comprar). 2 eixos cada, lidos pelo ADC do P4; confirmar tensão e se o clique do stick será usado |
+| Analógicos (sticks de PS3) | 2 | reaproveitar | **Tirar do controle genérico de PS3 que o usuário já tem** (sem compra). Cada stick tem 2 potenciômetros (X/Y) e o clique L3/R3. Ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados) |
+| Gatilhos de ombro (L/R) | 2–4 | estoque próprio | Botões tácteis em **ângulo reto**, como nos portáteis de emulação. Conferir se há modelos de ângulo reto no estoque; se não, comprar. Tampas: as do L1/R1 do controle de PS3 ou impressas em grafite; alavancas do L2/R2 se couberem (ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados)) |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
-| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | Ainda falta colocar no carrinho; pull-up I²C e divisor de leitura de bateria, valores finais dependem do esquemático |
-| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | Ainda falta colocar no carrinho; desacoplamento. Definir quantidade/valores adicionais no esquemático |
-| Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | Selecionado; R$ 15,78; compra não confirmada. Inclui os três tipos; prioridade imediata: F-F para testar CC1101 |
-| Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Ainda falta colocar no carrinho; fiação fina e protótipos |
-| Conector/soquete card edge 2,54 mm, 20/34 pinos | 2 peças | `CE 225F 2.54mm 20 34 pin card edge slot connector` | Selecionado; R$ 15,07; compra não confirmada. Confirmar se são duas unidades/versões 20P e 34P, espessura da placa inserida, largura, altura e desenho mecânico; não fechar footprint da PCB antes de medir o componente real |
+| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | **Comprado em 02/11/2026** (aguardando entrega): kit de filme metálico 1%, 30 valores (10 Ω–1 MΩ), 300 peças, R$ 19,96. Pull-ups do I²C, divisor da bateria e afins |
+| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | **Comprado em 02/11/2026** (aguardando entrega): pacote de 100 peças de 100 nF (104), R$ 12,24. Desacoplamento do MCP23017 e dos módulos |
+| Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | **Comprado em 02/11/2026** (aguardando entrega): variação "20cm 3kinds 120pin" (40 de cada tipo), R$ 22,10. Prioridade imediata: F-F para o CC1101 |
+| Protoboard MB-102 (830 pontos) | 1 | `MB-102 breadboard 830` | **Comprado em 02/11/2026** (aguardando entrega): variação "MB-102 white", R$ 13,26. A DevKitC-1 é larga e deixa só uma fileira livre de cada lado; se precisar, usar duas lado a lado |
+| Malha dessoldadora (2–3 mm) e fluxo no-clean | 1 cada | loja brasileira | Para tirar os analógicos do controle de PS3 e para a montagem. Fluxo no-clean em pasta ou caneta, nunca pasta ácida |
+| Adaptador microSD→SD | 1 | loja de informática | Se não veio com o cartão: o slot da tela é SD tamanho normal |
+| Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Comprar no Brasil: no AliExpress (carrinho de 02/11), o frete era R$ 83,04 para R$ 5,01 de fio. Fiação fina e protótipos |
+| Conector/soquete card edge 2,54 mm, 20/34 pinos | 2 peças | `CE 225F 2.54mm 20 34 pin card edge slot connector` | Fase 4, fora do carrinho de 02/11/2026. Antes de comprar: confirmar se o anúncio "2*20P" (R$ 14,33) são **2 peças de 20P** (correto) ou **um soquete 2×20 = 40 contatos** (~55 mm, não cabe no cartucho de 52 mm); medir a peça real antes de fechar o footprint |
 
 
 
-**Itens selecionados para o carrinho (preços informados em 02/11/2026; compra não confirmada):** módulo microSD SPI R$ 4,11; INMP441 R$ 13,89; MAX98357A R$ 5,99; alto-falante 2030 8 Ω/2 W R$ 7,44; conjunto IR TX/RX R$ 6,99; PN532 V3 R$ 17,20; placa ESP32-P4+C6 R$ 116,91; bateria 1S 4.000 mAh R$ 59,48; conector card edge 20/34P R$ 15,07; kit 40 jumpers Dupont R$ 15,78. **Subtotal atualizado: R$ 262,86, sem frete.** O usuário já possui cartão microSD ADATA e botões; não incluir esses itens no carrinho. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. O subtotal não inclui resistores, capacitores, fio, PCB ou fabricação.
+**Comprado em 02/11/2026, já com a S3 (aguardando entrega):** jumpers R$ 22,10; protoboard MB-102 R$ 13,26; PN532 R$ 17,20; IR R$ 7,03; MAX98357A R$ 8,36; alto-falante R$ 7,44; INMP441 R$ 12,14; resistores R$ 19,96; capacitores 100 nF R$ 12,24. **Total R$ 119,73**, antes do cupom de R$ 16 (se valer para o carrinho inteiro) e do imposto. Saíram a placa P4, a antena IPEX, o módulo microSD SPI e o fio de 30 AWG. Malha, fluxo e adaptador microSD→SD em loja brasileira.
+
+Histórico — **Carrinho revisado em 02/11/2026** (antes da volta para a S3; a placa P4 saiu do carrinho): placa P4+C6 R$ 116,91; PN532 V3 R$ 17,20; conjunto IR R$ 7,03; alto-falante R$ 7,44; jumpers R$ 15,79; card edge R$ 14,33 (todos Choice, frete grátis); MAX98357A R$ 5,99; INMP441 R$ 13,89; módulo microSD R$ 4,11 e fio 30 AWG 3 × R$ 1,67 (fora do Choice). Os quatro itens fora do Choice somavam **R$ 177,91 de frete para R$ 29,10 em peças**, e o resumo não mostrava imposto nem ICMS. Decisões: o módulo microSD e o fio saem do carrinho; o MAX98357A e o INMP441 voltam depois em versão Choice; a bateria e os analógicos ainda não estão no carrinho. A compra foi dividida em fases (ver [Compras em fases](#compras-em-fases)). O usuário já possui cartão microSD ADATA e botões; não comprar. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. Resistores e capacitores avulsos só servem para bancada: na PCB, entram como SMD montados pela JLCPCB.
 
 **Carga + BMS + boost agora são componentes SMD na própria PCB** (projetados no EasyEDA, fabricados pela JLCPCB), não módulos avulsos TP4056/MT3608. Perfboard saiu: vai direto para a PCB projetada. Ver seção Fabricação.
 
-**Removido do v1**: teclado Rii i8, 2× MCP23017 e soquetes DIP (foram para o Projeto 2); **OLED 1,3" secundário** (sem o teclado, uma tela só já faz rosto + menu + status).
+**Removido do v1**: teclado Rii i8 e soquetes DIP (foram para o Projeto 2); os 2× MCP23017 voltaram em 02/11/2026 para ler os botões; **OLED 1,3" secundário** (sem o teclado, uma tela só já faz rosto + menu + status).
+
+---
+
+## Compras em fases
+
+Decidido em 02/11/2026: comprar aos poucos, cada fase destrava um teste. A carcaça **não é a
+primeira compra**: ela é desenhada em volta das peças que definem o volume (placa, tela,
+bateria, analógicos), então só é modelada depois da Fase 2.
+
+| Fase | Comprar | Custo aproximado | O que destrava |
+|---|---|---:|---|
+| 1. Núcleo + periféricos (comprada em 02/11/2026) | Jumpers, protoboard, resistores, capacitores 100 nF, PN532, IR, MAX98357A, alto-falante, INMP441 | R$ 119,73 antes do cupom e do imposto | CC1101, NFC, IR e áudio na S3 com o Bruce. Sem compra: slot SD da tela com adaptador, 1 MCP23017 nos botões, rosto do d-BMO. A Fase 3 original foi antecipada para cá, com o dinheiro que sobrou sem a P4 |
+| 2. Volume + energia (próxima rodada) | Bateria com PCM + NTC **e** módulo de carga com power-path (BQ24074 ou MCP73871) na mesma compra; botões tácteis de ângulo reto se faltarem no estoque; tirar os analógicos do controle de PS3 (sem compra) | ~R$ 80–100 | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. Bateria sem carregador adequado não se compra: os dois vão juntos. O módulo também valida a energia na bancada (ver [Riscos da bateria](#riscos-da-bateria-e-recomendações)) |
+| 3. Periféricos | — | — | Antecipada para a Fase 1 (comprada em 02/11/2026) |
+| 4. Cartuchos | Soquete card edge | ~R$ 15 | Cartucho no topo; até lá, a fenda fica com tampa cega |
+| 5. Definitivo | PCB própria na JLCPCB (ESP32-S3-WROOM-1-N16R8, carga/BMS/regulador SMD, MCP23017, riser do card edge) | ~R$ 100 por 5 placas + montagem, frete e imposto | Carcaça v1 em volta da PCB definitiva |
+
+Preços do carrinho de 02/11/2026; mudam e expiram.
 
 ---
 
 ## Arquitetura
 
-**Plataforma principal definida: ESP32-P4 + ESP32-C6.** A placa selecionada substitui o ESP32-S3 na arquitetura final. A função exata de cada chip, o barramento de comunicação entre eles, a pinagem disponível e os recursos da placa devem ser confirmados no esquemático do modelo adquirido. O diagrama abaixo é conceitual, não constitui pinout.
+**Plataforma: ESP32-S3 N16R8** (confirmada em 02/11/2026). O diagrama abaixo é conceitual; os pinos estão em [Pinagem](#pinagem-esp32-s3-n16r8).
 
 ```
                         ┌───────────────────┐
-                        │    ESP32-P4        │
-                        │  + ESP32-C6        │
+                        │   ESP32-S3 N16R8   │
+                        │ (WiFi + BLE no chip)│
                         └─────────┬─────────┘
            ┌──────────────┬───────┼────────┬──────────────┐
           SPI            I²C      I2S      GPIO          USB
@@ -160,16 +187,50 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 ```
 
 - **SPI** (SCK/MOSI/MISO compartilhados, cada um com seu CS): Display, CC1101, MicroSD.
-- **I²C** (SDA/SCL): PN532 (0x24). (Tela única; sem OLED secundário.)
+- **I²C** (SDA/SCL): PN532 (0x24), MCP23017 dos botões (0x20), EEPROM do cartucho. (Tela única; sem OLED secundário.)
 - **I²S**: MAX98357A (saída) + INMP441 (entrada), mesmo barramento.
-- **GPIO direto**: IR RX/TX, botões/D-pad.
-- **ADC**: 2 analógicos (4 eixos) e leitura de bateria. Confirmar quantos canais ADC livres a placa P4+C6 expõe.
+- **GPIO direto**: IR RX/TX, botão de energia, CS do cartucho, power-latch. Os 16 botões ficam no MCP23017, lidos por polling.
+- **ADC**: 2 analógicos (4 eixos) e leitura de bateria, **só no ADC1 (GPIO 1–10)**: o ADC2 não funciona com o WiFi ligado.
 
 ---
 
-## Pinagem (ESP32-P4 + ESP32-C6)
+## Pinagem (ESP32-S3 N16R8)
 
-**Pendente de definição.** A tabela de GPIOs do ESP32-S3 foi removida porque não pode ser reaproveitada na nova plataforma. Antes de congelar a PCB, obter o esquemático e o pinout exatos da placa selecionada; identificar os GPIOs acessíveis em cada chip e a interface de comunicação P4-C6; reservar sinais para display, CC1101, PN532, microSD, I²S, IR, botões, leitura da bateria e USB. Não copiar GPIOs nem configurações do arquivo `firmware/bruce/bmo.ini` sem validação.
+Tabela restaurada (tinha sido removida na migração para a P4) e ampliada em 02/11/2026 para os
+analógicos, o MCP23017 e o cartucho. A tela, os 3 botões e o CC1101 já estão fixados no Bruce
+(`firmware/bruce/bmo.ini`); o resto é **proposta**, a validar na bancada. Conferir contra a
+serigrafia da placa.
+
+| Função | GPIO | Nota |
+|---|---:|---|
+| VBAT sense | 1 | ADC1; divisor 100k/100k, ×2 no firmware |
+| Analógico esquerdo X / Y | 2 / 4 | ADC1. Hoje o 2 é o botão OK e o 4 é o IR RX no `bmo.ini`: mudam quando os botões forem para o MCP23017 |
+| Analógico direito X / Y | 5 / 6 | ADC1. Hoje o 5 é o IR TX no `bmo.ini` |
+| I²S SD IN (mic) | 7 | mic em 3,3 V, L/R no GND |
+| I²C SDA / SCL | 8 / 9 | pull-up 4,7k; PN532 0x24, MCP23017 0x20, EEPROM do cartucho |
+| CS Display | 10 | |
+| SPI MOSI / SCK / MISO | 11 / 12 / 13 | compartilhado: tela, CC1101, microSD, cartucho |
+| CS CC1101 | 14 | |
+| CC1101 GDO0 | 15 | interrupção RF |
+| Display BLK | 16 | backlight (3,3 V fixo ou PWM) |
+| Display DC / RES | 17 / 18 | |
+| USB D− / D+ | 19 / 20 | USB nativo (gravação, serial CDC, BadUSB) |
+| CS microSD | 21 | slot do módulo da tela |
+| Botão de energia | 0 | strapping; GPIO RTC, acorda do deep sleep |
+| Shutdown do MAX98357A (SD) | 3 | strapping (JTAG); seguro como saída depois do boot |
+| CS do cartucho | 38 | na DevKitC, 38 ou 48 é o LED RGB, conforme a revisão: na bancada, usar o que não for LED |
+| IR RX | 39 | |
+| I²S BCLK / LRC / DOUT | 40 / 41 / 42 | DOUT para o MAX98357A |
+| UART do cartucho TX / RX | 43 / 44 | UART0; liberado porque o console usa o USB CDC |
+| Power-latch (HOLD) | 48 | segura a alimentação ligada depois do clique no botão |
+| IR TX | 47 | |
+| Livre | 45, 46 | strapping: o 45 define a tensão da flash no boot, **não usar** como saída que possa estar em alto no boot |
+
+**MCP23017 (0x20):** 16 botões (D-pad 4, ação 4, select/start 2, L1/R1/L2/R2 4, cliques dos
+analógicos 2), botão ao GND com pull-up interno do MCP. **Segundo MCP23017 (0x21), opcional:**
+vibração (liga/desliga via transistor) e os 2 GPIOs do cartucho.
+
+**Não usar:** GPIO 26–37 (flash/PSRAM octal). Cuidado com strapping: 0, 3, 45, 46.
 
 ---
 
@@ -180,17 +241,51 @@ fica **desenhado na própria PCB** com componentes SMD, em vez de módulos avuls
 
 ```
 USB-C → circuito de carga (SMD) → LiPo 1S → BMS/proteção (SMD) → [power-latch comandado por botão] → boost 5V (SMD)
-   → alimentação da placa P4+C6 e MAX98357A conforme esquemático → 3,3V regulados para os módulos
+   → 3,3 V para a S3 e os módulos; MAX98357A direto da bateria (ver item 6 dos riscos)
 ```
 
 - Carga, proteção, boost e circuito de power-latch/gerenciamento do botão são **componentes SMD na placa** (definir topologia e CI no esquemático).
 - Projeto do circuito de energia no EasyEDA, com orientação do Tiago Batista.
 - Continua valendo: 5V para MAX98357A, 3,3V para o resto, nunca expor a bateria crua.
-- **Limitar a corrente de carga.** A bateria LiPo 1S é pequena; 1 A (padrão dos módulos de
-  carga avulsos) a estraga. Dimensionar o CI de carga para uma corrente segura (tipicamente
+- **Limitar a corrente de carga.** Dimensionar o CI de carga para uma corrente segura (até
   ~0,5C) no EasyEDA. Essa é a parte mais crítica do projeto de energia (nota do Tiago Batista).
+  Atualização de 02/11/2026: a nota original ("1 A estraga") valia para uma bateria pequena.
+  Com a de 4000 mAh, 1 A é 0,25C, uma carga suave. O limite passa a ser a entrada: só com os
+  resistores de 5,1 kΩ no CC, a porta garante ~500 mA (~8 h de carga). O carregador precisa
+  limitar a corrente de entrada ao que a fonte oferece.
 - **BMS obrigatório.** Proteção de 1 célula: não deixa cair abaixo de ~2,5–3,0 V nem passar de
   4,2 V, e monitora a carga. Entra como SMD na mesma PCB.
+
+### Riscos da bateria e recomendações
+
+Revisão de 02/11/2026. Uma LiPo incha principalmente por: carga acima de 4,2 V, descarga abaixo
+de ~3,0 V seguida de recarga, carga em temperatura alta, ficar parada em 4,2 V por muito tempo
+e pressão mecânica.
+
+1. **Carregador com power-path e entrada NTC.** Com carregador linear simples, o aparelho
+   ligado puxa corrente durante a carga, o CI não detecta o fim e a bateria fica presa em
+   4,2 V por horas, o que envelhece e incha a célula. Com power-path, o sistema roda pela USB
+   e a bateria só recebe a carga. Candidatos: TI BQ24074 (sem I²C) ou BQ25895/BQ25601 (com
+   I²C e telemetria). Conferir estoque na JLCPCB. **Decisão em aberto.**
+2. **Bateria com PCM e NTC de 3 fios.** O BMS da PCB vira a segunda camada de proteção.
+3. **Polaridade do JST:** conferir com multímetro antes de ligar qualquer bateria nova.
+4. **Corrente desligado ≤ ~10 µA**, somando power-latch, divisor de leitura da bateria, BMS e
+   carregador. Vazamento esvazia a bateria em meses na gaveta, e recarregar depois da descarga
+   profunda é causa de inchaço. O firmware desliga sozinho em ~3,3–3,4 V, antes do corte do BMS.
+5. **Dois USB-C:** com as duas portas ligadas ao mesmo tempo, os VBUS se alimentam um ao outro.
+   Opções: um USB-C só para dados e carga (mais simples) ou OR com diodo ideal antes do
+   carregador. **Decisão em aberto.**
+6. **Boost de 5 V provavelmente desnecessário.** Com a S3, nada no v1 exige 5 V: a S3, a tela, o
+   CC1101 e o PN532 funcionam em 3,3 V, e o MAX98357A funciona direto da bateria (2,5–5,5 V).
+   Recomendado: **buck-boost de 3,3 V** a partir da bateria, que esquenta menos que boost 5 V +
+   regulador 3,3 V. Dimensionar para o pico de WiFi + CC1101 + tela + áudio, com folga. Na
+   DevKitC da bancada, o pino 3V3 aceita 3,3 V direto (sem passar pelo regulador da placa).
+   **Decisão em aberto:** manter ou não a linha de 5 V no conector do cartucho.
+7. **Mecânica:** ~10% de folga de espessura no berço da bateria, sem cola rígida, sem aresta
+   encostando, longe do regulador, do amplificador e da S3. Carcaça em PETG ou ASA, não PLA
+   (amolece a ~55 °C).
+8. **Validar na bancada antes da PCB:** testar o circuito de energia com um módulo pronto de
+   carga com power-path, em superfície não inflamável e sem deixar carregando sozinho.
 
 ### Conector de carga USB-C dedicado
 
@@ -211,11 +306,58 @@ Uma **porta USB-C só para carga**, separada da porta de dados, para o usuário 
 ## Configurações críticas
 
 - **PN532**: DIP switches em I²C (0x24). Plano B: HSU (serial) se instável.
-- **ESP32-P4 + ESP32-C6:** selecionar o alvo/board package correspondente ao modelo exato da placa. Verificar suporte do Arduino-ESP32 e avaliar ESP-IDF para os recursos avançados do P4. Não reutilizar configurações específicas do ESP32-S3 sem validação.
-- **Bruce:** o build existente em `firmware/bruce/` foi feito para ESP32-S3. A migração para ESP32-P4+C6 depende de confirmar suporte do projeto upstream, drivers e periféricos; pode exigir portabilidade significativa. Não considerar o firmware atual compatível até compilar e testar na placa nova.
+- **ESP32-S3 N16R8** no Arduino IDE: `PSRAM: OPI PSRAM` e `Flash Size: 16MB`. Com o cabo na
+  porta USB nativa, também `USB CDC On Boot: Enabled` (senão o serial fica mudo, e o UART0 fica
+  livre para o cartucho).
+- **Bruce**: build próprio do d-BMO em `firmware/bruce/` (`build.sh`). O PlatformIO tem que rodar
+  num venv com Python 3.10 a 3.14 (o do Homebrew vem mais novo), e no ESP32-S3 a tela exige
+  `USE_HSPI_PORT`, senão o Bruce trava no boot. Ao passar os botões para o MCP23017, a leitura
+  em `firmware/bruce/interface.cpp` muda de GPIO para I²C.
+- **Retro-Go**: criar um alvo próprio (pasta em `targets/`, com `config.h` da tela ILI9341, do
+  SD e dos botões via MCP23017), a partir de um alvo ESP32-S3 existente.
 - **Display**: driver ILI9341 (tela única).
 - **I²C**: pull-ups 4,7k em SDA/SCL. Scan deve achar `0x24` (PN532).
 - **microSD**: formatar em FAT32.
+
+### Analógicos e gatilhos reaproveitados
+
+Decidido em 02/11/2026: os dois analógicos saem de um controle genérico de PS3 que o usuário já tem.
+
+- **Ao abrir o controle:** se houver bateria interna, desconectar primeiro e não perfurar. Não
+  reaproveitar essa bateria no d-BMO (estado desconhecido).
+- **Retirada:** cada stick tem ~10 pinos e abas de fixação grossas. Dessoldar com fluxo, solda
+  nova e bomba ou malha. Alternativa mais segura: cortar a placa do controle em volta do stick
+  com micro retífica e soldar fios no pedaço (fica um pouco maior).
+- **Teste antes de usar:** medir a resistência entre as pontas de cada potenciômetro (costuma
+  ser 10 kΩ; genérico pode ser 5 kΩ) e conferir se o pino do meio varia suave, sem saltos
+  (sticks gastos têm drift).
+- **Ligação:** pontas em **3,3 V e GND, nunca 5 V**; pino do meio no ADC. 4 canais de ADC (2 por
+  stick, GPIO 2/4/5/6 no ADC1) + 2 cliques no MCP23017. Ver [Pinagem](#pinagem-esp32-s3-n16r8).
+- **Firmware:** calibrar o centro ao ligar, guardar mínimo/máximo e aplicar zona morta. Deixar
+  a calibração ajustável, porque potenciômetro barato muda com o tempo.
+- **Carcaça:** medir o stick já fora do controle (área e altura com a capa); essa medida entra
+  na espessura da v0.
+- **Gatilhos:** no controle genérico, o gatilho costuma ser uma alavanca que aperta borracha
+  condutiva sobre uma trilha da placa do controle, então a parte elétrica não serve. Se houver
+  um potenciômetro no pivô do L2/R2, ele é analógico e serve como os sticks (1 canal de ADC
+  cada, disputado). A parte plástica serve:
+  - **L1/R1:** a tampa plástica pode apertar um botão táctil de ângulo reto já na v0.
+  - **L2/R2:** a alavanca, a mola e o pino do pivô servem se a carcaça tiver o apoio do pivô
+    impresso e um botão táctil embaixo. Medir antes: elas foram desenhadas para um controle
+    horizontal e podem ser grandes demais para o topo do corpo vertical. Se não couberem na v0,
+    usar tampas impressas e guardar as alavancas para a v1.
+- **Tampas dos botões de ação e D-pad:** servem como tampa por cima de botões tácteis de
+  6 × 6 mm. Imprimir um espaçador embaixo de cada uma (elas foram feitas para afundar membrana,
+  não para apertar botão táctil). O furo da carcaça sai das medidas de paquímetro do corpo e
+  da aba, com folga de ~0,2–0,3 mm. D-pad de peça única: imprimir o apoio do pino central e pôr
+  4 botões tácteis sob as pontas; setas separadas viram tampas independentes. **Os símbolos
+  △ ○ × □ coloridos vão contra a spec (botões monocromáticos) e são marca da Sony:** lixar e
+  pintar de grafite, ou usar as tampas só como molde de medida e imprimir as próprias.
+- **Botão redondo "P3":** pode virar o botão de energia, com o topo lixado e liso.
+- **Não servem:** a placa com as membranas, as borrachas condutivas, o mini-USB e a carcaça do
+  controle.
+- **Extra:** os motores de vibração do controle podem servir para vibração no futuro
+  (precisam de transistor para acionar). Os botões de membrana do controle não servem.
 
 ---
 
@@ -229,6 +371,10 @@ Um firmware por vez (como "cartuchos de software"):
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
 | **Modo agente** (futuro) | d-BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
+
+**Volume:** sem botão físico (decidido em 02/11/2026). O MAX98357A não tem controle de volume; o
+volume é digital, no firmware, e o ajuste é por atalho: **segurar select + cima/baixo no D-pad**,
+como nos portáteis de emulação. Guardar o nível na NVS para sobreviver ao desligamento.
 
 No Bruce, a leitura dos 3 botões já está em `firmware/bruce/interface.cpp`. Falta o D-pad
 completo e o input do emulador.
@@ -306,6 +452,21 @@ estados: `IDLE`, `THINKING`, `SCANNING`, `ANALYZING`, `SUCCESS`, `ALERT`, `ERROR
   lateral. (O microSD não fica na lateral: fica dentro da porta traseira, ver acima.)
 - Detalhes mecânicos precisos (recorte de botões, heat-sets, bosses) saem do **CAD**
   (Fusion / Tinkercad / FreeCAD), não de gerador de imagem.
+
+### Carcaça v0 (protótipo)
+
+Primeira carcaça, impressa depois da [Fase 2](#compras-em-fases), antes da PCB própria:
+
+- Leva a **DevKitC S3 inteira**, presa por suportes impressos (a DevKitC não tem furos de
+  fixação), com os módulos ligados por fio. É protótipo: a decisão de não usar fiação manual
+  vale para a versão final.
+- Forma externa da variação 1 já na v0; espessura, parafusos e encaixe interno mudam na v1.
+- Furos e fendas de todas as peças já impressos (grade do speaker, mic, janela do IR, saída
+  SMA, fenda do cartucho, USB-C). Os que ainda não têm peça ficam com **tampas cegas**.
+- A antena de trilha da S3 fica na ponta da DevKitC: posicionar essa ponta perto de uma borda
+  da carcaça, longe da bateria, do alto-falante e de metal.
+- Contar com 2 ou 3 reimpressões. Antes, um corpo de prova pequeno com o encaixe dos standoffs
+  e dos parafusos.
 
 ### Fabricação: EasyEDA + JLCPCB (decidido)
 
@@ -423,6 +584,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 |---|---|
 | Tela principal (placa) | 89,3 × 55,04 mm (datasheet; na régua deu 88 × 54); vidro visível ~70 × 51 mm (régua); área ativa 64,8 × 48,6 mm (datasheet) |
 | Bateria selecionada | dimensões anunciadas 0,4 × 70 × 115 mm; confirmar unidade e medida real |
+| ESP32-S3 DevKitC-1 N16R8 | medir com paquímetro (comprimento, largura e altura com os pinos) |
 | Cartucho (PCB) | 52 × 52 mm, 1,6 mm; língua ~27,8 mm |
 | Soquete DK920A-20M (corpo) | 31,7 × 9,2 mm, altura ~10,2 mm; fileiras a 5,08 mm; fenda 1,9 mm |
 
@@ -437,11 +599,11 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 ## Montagem passo a passo
 
 1. Entrada do v1 definida: D-pad + botões + dois analógicos (sticks de PS3 no ADC).
-2. **Validação antes da PCB.** A simulação do EasyEDA não valida firmware nem periféricos como um protótipo real. Como a plataforma mudou para ESP32-P4+C6, validar primeiro a placa exata, comunicação entre os chips, display, CC1101, PN532, microSD e áudio. Confirmar a disponibilidade/portabilidade de Bruce e Retro-Go; não presumir que firmwares do ESP32-S3 funcionem no P4.
-   - **Bancada:** testar a placa P4+C6 selecionada com a tela e CC1101; compilar firmware mínimo para a plataforma antes de congelar a pinagem.
+2. **Validação antes da PCB.** A simulação do EasyEDA não valida firmware nem periféricos como um protótipo real. Validar na S3 a tela, o CC1101, o PN532, o microSD, o MCP23017, os analógicos e o áudio antes de congelar a pinagem.
+   - **Bancada:** a S3 já roda o Bruce com a tela e 3 botões; falta o CC1101 (jumpers F-F) e o resto, um módulo por vez.
    - Teste do CC1101: ler o registrador de versão por SPI e testar captura/reenvio apenas em equipamento próprio/autorizado.
-   - Usar os sketches existentes como referência, adaptando alvos e pinos à nova plataforma.
-3. Projetar a PCB no EasyEDA: núcleo P4+C6 + periféricos + **carga/BMS/boost SMD** + **card edge** do conector.
+   - Usar os sketches existentes (`firmware/teste_tela`, `firmware/teste_cc1101`) como referência.
+3. Projetar a PCB no EasyEDA: ESP32-S3-WROOM-1-N16R8 + MCP23017 + periféricos + **carga/BMS/boost SMD** + **card edge** do conector.
    Cotar e fabricar na JLCPCB.
 4. Com a placa pronta, soldar/encaixar os periféricos (tela, antena, botões, módulos).
 5. Firmware: Bruce (base), rosto do d-BMO na tela, retrogames no cartão SD.
@@ -455,8 +617,16 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [x] Fechar entrada: D-pad + botões + dois analógicos (sticks de PS3 no ADC)
 - [ ] Projetar a riser do card edge no topo
 - [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
-- [ ] Validar a placa ESP32-P4+C6 selecionada e definir nova pinagem
-- [ ] Verificar suporte/portar Bruce e Retro-Go para ESP32-P4+C6
+- [x] Fase 1 + periféricos comprada no AliExpress em 02/11/2026 (R$ 119,73 antes do cupom e do imposto)
+- [ ] Comprar malha, fluxo e adaptador microSD→SD no Brasil
+- [ ] Próxima rodada: bateria com PCM + NTC e módulo de carga com power-path, juntos
+- [ ] Ligar o slot SD da tela (cartão microSD com adaptador SD) no CS 21
+- [ ] Ligar 1 MCP23017 e passar os botões para ele (Bruce `interface.cpp`)
+- [ ] Validar a pinagem proposta da S3 e atualizar o `bmo.ini`
+- [ ] Fase 2: tirar e testar os analógicos do controle de PS3; comprar a bateria (PCM + NTC); modelar e imprimir a carcaça v0
+- [ ] Decidir carregador (power-path), USB-C único vs OR com diodo ideal, e se o cartucho mantém a linha de 5 V
+- [ ] Validar o circuito de energia na bancada antes de fechar a PCB
+- [ ] Criar o alvo do Retro-Go para a placa (ILI9341 + SD + MCP23017)
 - [ ] CC1101 na bancada (`teste_cc1101` e captura de 433 MHz no Bruce): faltam jumpers fêmea
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
@@ -487,6 +657,10 @@ Alternativas avaliadas e **descartadas** (documentadas para não repetir):
 | Segundo ESP32 / placa de processamento acoplada | O "cérebro extra" é remoto por WiFi/BLE, não acoplado por fio |
 | Teclado QWERTY no v1 | Removido de propósito; vai para o Projeto 2 (Pi/Kali) |
 | Pendrive USB como armazenamento | O microSD já cobre |
+| Botões físicos de volume ou roda de volume | Volume por atalho (select + cima/baixo); evita ocupar o 2º MCP23017 e o ADC1, que não tem canal livre, e um potenciômetro na saída do amplificador desperdiçaria energia |
+| Módulo microSD SPI com conversor de nível | Trava o SPI compartilhado; usar o slot SD da tela ou um slot na PCB |
+| ESP32-P4 + ESP32-C6 (Guition JC-ESP32P4-M3-DEV) no v1 | **Adiada para o v2 (02/11/2026).** O Bruce não suporta a P4; o ESP-Hosted padrão não expõe modo promíscuo nem TX 802.11 bruto, base das funções de WiFi do Bruce; o Retro-Go não tem alvo para P4; custaria R$ 116,91 + antena IPEX; a S3 já roda o Bruce. Reavaliar quando houver suporte oficial, ou se o foco virar SNES/Mega Drive, câmera MIPI ou USB HS |
+| Comprar todas as peças de uma vez | Dividido em fases por orçamento; a carcaça v0 só depois das peças que definem o volume |
 | Segunda tela (OLED de status) | Sem o teclado, a tela única ILI9341 faz rosto + menu + status |
 | Perfboard / fiação manual | Substituído por PCB projetada (EasyEDA → JLCPCB); montagem mais limpa |
 | PCB caseira no laser | Fábrica (JLCPCB) faz trilha mais fina e já solda os SMD de carga/BMS |
