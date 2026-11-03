@@ -1,4 +1,4 @@
-# dark-BMO — hardware do d-BMO
+# d-BMO-body — hardware do d-BMO
 
 <p align="center">
   <img src="docs/img/dbmo-referencia-conceitual-v1.jpeg" alt="Referência conceitual do d-BMO: videogame portátil vertical prata, tela 4:3 com rosto em pixels vermelhos, D-pad e botões grafite, dois analógicos, apoiado num suporte inclinado" width="320">
@@ -11,27 +11,27 @@
 
 ![status](https://img.shields.io/badge/status-planejamento%20%2F%20montagem-yellow)
 ![plataforma](https://img.shields.io/badge/MCU-ESP32--S3-blue)
-![licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
+![licença](https://img.shields.io/badge/licen%C3%A7a-Apache--2.0-green)
 
 ---
 
 ## Sobre
 
-O **dark-BMO** é o hardware do **d-BMO** (BE MORE DARK), um aparelho de mão feito do zero para estudar segurança da
+O **d-BMO-body** é o hardware do **d-BMO** (BE MORE DARK), um aparelho de mão feito do zero para estudar segurança da
 informação na prática: rádio sub-GHz, NFC, infravermelho, WiFi e Bluetooth. Nasceu do
 reaproveitamento de um mini teclado Rii i8 achado em casa e foi crescendo até virar um
 projeto completo de hardware + firmware.
 
 O visual segue a identidade do d-BMO, definida em
-[`resende-g/BMO`](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md):
+[`resende-g/d-BMO`](https://github.com/resende-g/d-BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md):
 videogame portátil de emulação vertical, corpo prata, rosto em pixels vermelhos na tela,
 dois analógicos e nenhum membro (ver [Aviso legal](#aviso-legal)).
 
 **Relação com o assistente d-BMO.** O d-BMO também é um assistente de IA pessoal, local-first,
-documentado em [`resende-g/BMO`](https://github.com/resende-g/BMO). Este aparelho é o **corpo
+documentado em [`resende-g/d-BMO`](https://github.com/resende-g/d-BMO). Este aparelho é o **corpo
 físico** dele: no [modo agente](#firmware), ele se conecta ao BMO Brain como cliente autenticado,
 pela rede privada, e usa a tela, o alto-falante e o microfone. As regras da integração estão na
-[seção 4.11 da arquitetura do BMO](https://github.com/resende-g/BMO/blob/main/ARCHITECTURE.md):
+[seção 4.11 da arquitetura do BMO](https://github.com/resende-g/d-BMO/blob/main/ARCHITECTURE.md):
 o aparelho não acessa a memória pessoal (BMO Heart) e o Brain **não aciona** as ferramentas de RF,
 NFC e IR do Bruce remotamente.
 
@@ -378,7 +378,7 @@ Um firmware por vez (como "cartuchos de software"):
 | **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Build próprio do d-BMO (versão 1.16.1, tela ILI9341 + 3 botões + CC1101) em `firmware/bruce/`: o binário oficial da DevKitC não tem tela |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
-| **Modo agente** (futuro) | Corpo remoto do assistente d-BMO ([`resende-g/BMO`](https://github.com/resende-g/BMO)): cliente autenticado da API local do BMO Brain pela rede privada (WiFi + NetBird), usando speaker, mic e tela; o rosto mostra o estado do Brain. Só firmware, sem hardware novo. RF, NFC e IR ficam fora do alcance do agente |
+| **Modo agente** (futuro) | Corpo remoto do assistente d-BMO ([`resende-g/d-BMO`](https://github.com/resende-g/d-BMO)): cliente autenticado da API local do BMO Brain pela rede privada (WiFi + NetBird), usando speaker, mic e tela; o rosto mostra o estado do Brain. Só firmware, sem hardware novo. RF, NFC e IR ficam fora do alcance do agente |
 
 **Volume:** sem botão físico (decidido em 02/11/2026). O MAX98357A não tem controle de volume; o
 volume é digital, no firmware, e o ajuste é por atalho: **segurar select + cima/baixo no D-pad**,
@@ -401,7 +401,7 @@ quando ocioso (olhos piscam, boca reage), o **menu/terminal** quando em uso, e i
 de **status** (bateria / sinal / atividade). Alterna conforme o estado do aparelho.
 
 Estilo: **blocos de pixel vermelho (#D92332) sobre fundo preto**, sem traços finos, conforme a
-[spec do personagem](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
+[spec do personagem](https://github.com/resende-g/d-BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
 Recomendação de implementação: desenhar os rostos **por código** (ex. TFT_eSPI, com
 retângulos numa grade fixa), não por bitmap, para a animação ficar leve. A spec prevê dez
 estados: `IDLE`, `THINKING`, `SCANNING`, `ANALYZING`, `SUCCESS`, `ALERT`, `ERROR`,
@@ -699,7 +699,7 @@ pelo uso é de quem monta e opera.
 
 O d-BMO é um personagem original: videogame portátil de emulação, prata, sem membros, com
 rosto em pixels vermelhos. A especificação, os elementos de distinção e os vedados estão em
-[`CHARACTER_SPECIFICATION.md`](https://github.com/resende-g/BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
+[`CHARACTER_SPECIFICATION.md`](https://github.com/resende-g/d-BMO/blob/main/docs/brand/CHARACTER_SPECIFICATION.md).
 
 Até 2026-11-02, este repositório usava um visual inspirado no personagem BMO de *Adventure
 Time* (Cartoon Network / Warner Bros. Discovery). Esse visual foi abandonado, e as imagens
@@ -710,8 +710,20 @@ endossado por esses detentores de direitos.
 
 ## Licença
 
-Código sob [MIT](LICENSE). Documentação sob
-[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (não comercial, pelo aviso acima).
+Copyright 2026 Gabriel Almeida Resende. Decidido em 02/11/2026, igual ao
+[`resende-g/d-BMO`](https://github.com/resende-g/d-BMO):
+
+| O quê | Licença | Por quê |
+|---|---|---|
+| Código próprio e documentação | [Apache-2.0](LICENSE) | Permissiva, com concessão de patentes e sem conceder direitos de marca (§6) |
+| `firmware/bruce/` | [AGPL-3.0](firmware/bruce/LICENSE) | É derivado do Bruce (`interface.cpp` parte de uma placa do Bruce), que é AGPL-3.0; o build só existe junto com ele |
+| Arquivos de projeto de hardware (PCB do EasyEDA, CAD da carcaça), quando entrarem | [CERN-OHL-P-2.0](LICENSE-HARDWARE) | Licença de hardware aberto equivalente à Apache: permite fabricar e modificar |
+| Futuro alvo do Retro-Go | GPL-2.0, em pasta própria | O Retro-Go é GPL-2.0, incompatível com a Apache-2.0 no mesmo arquivo |
+
+**Fora das licenças:** o nome **d-BMO**, a forma por extenso **BE MORE DARK**, o logotipo, o
+personagem e as imagens de `docs/img/` (referências geradas por IA e conceitos dos cartuchos).
+Todos os direitos reservados. Até 02/11/2026, o código estava sob MIT e a documentação sob
+CC BY-NC 4.0; cópias feitas até essa data mantêm aquelas licenças.
 
 ---
 
