@@ -372,6 +372,10 @@ Um firmware por vez (como "cartuchos de software"):
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
 | **Modo agente** (futuro) | d-BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
 
+**Volume:** sem botão físico (decidido em 02/11/2026). O MAX98357A não tem controle de volume; o
+volume é digital, no firmware, e o ajuste é por atalho: **segurar select + cima/baixo no D-pad**,
+como nos portáteis de emulação. Guardar o nível na NVS para sobreviver ao desligamento.
+
 No Bruce, a leitura dos 3 botões já está em `firmware/bruce/interface.cpp`. Falta o D-pad
 completo e o input do emulador.
 
@@ -653,6 +657,7 @@ Alternativas avaliadas e **descartadas** (documentadas para não repetir):
 | Segundo ESP32 / placa de processamento acoplada | O "cérebro extra" é remoto por WiFi/BLE, não acoplado por fio |
 | Teclado QWERTY no v1 | Removido de propósito; vai para o Projeto 2 (Pi/Kali) |
 | Pendrive USB como armazenamento | O microSD já cobre |
+| Botões físicos de volume ou roda de volume | Volume por atalho (select + cima/baixo); evita ocupar o 2º MCP23017 e o ADC1, que não tem canal livre, e um potenciômetro na saída do amplificador desperdiçaria energia |
 | Módulo microSD SPI com conversor de nível | Trava o SPI compartilhado; usar o slot SD da tela ou um slot na PCB |
 | ESP32-P4 + ESP32-C6 (Guition JC-ESP32P4-M3-DEV) no v1 | **Adiada para o v2 (02/11/2026).** O Bruce não suporta a P4; o ESP-Hosted padrão não expõe modo promíscuo nem TX 802.11 bruto, base das funções de WiFi do Bruce; o Retro-Go não tem alvo para P4; custaria R$ 116,91 + antena IPEX; a S3 já roda o Bruce. Reavaliar quando houver suporte oficial, ou se o foco virar SNES/Mega Drive, câmera MIPI ou USB HS |
 | Comprar todas as peças de uma vez | Dividido em fases por orçamento; a carcaça v0 só depois das peças que definem o volume |
