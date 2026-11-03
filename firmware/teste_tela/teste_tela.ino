@@ -1,8 +1,8 @@
 // Teste de bancada da tela ILI9341 3,2" (BMO v1).
 // Pinagem: README > Pinagem. VCC da tela no 3V3; LED no 3V3 na bancada (o pino 16 vai
 // em HIGH mesmo assim, para quando o backlight passar a ser controlado).
-// Versão touch (MSP3218, 14 pinos): T_CLK, T_CS, T_DIN, T_DO e T_IRQ ficam sem ligação, e os SD_* do slot
-// no verso também (o microSD do BMO é o módulo separado, na porta traseira).
+// Versão touch (MSP3218, 14 pinos): T_CLK, T_CS, T_DIN, T_DO e T_IRQ ficam sem ligação. Os SD_* do slot
+// no verso (SD tamanho normal; o cartão microSD entra com adaptador) vão no CS 21 e no SPI compartilhado.
 // Biblioteca: "Adafruit ILI9341" (o gerenciador instala junto Adafruit GFX e BusIO).
 // Arduino IDE: placa "ESP32S3 Dev Module", PSRAM "OPI PSRAM", Flash Size "16MB",
 // USB CDC On Boot "Enabled" (Serial em 115200 pelo USB-C marcado USB).

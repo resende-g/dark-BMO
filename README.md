@@ -399,6 +399,12 @@ retângulos numa grade fixa), não por bitmap, para a animação ficar leve. A s
 estados: `IDLE`, `THINKING`, `SCANNING`, `ANALYZING`, `SUCCESS`, `ALERT`, `ERROR`,
 `PROTECTING`, `CURIOUS` e `OFFLINE`. Não usar rostos de personagens existentes como referência.
 
+Primeira versão em [`firmware/rosto/`](firmware/rosto/): os 10 estados numa grade de 16 × 12 blocos (20 px), com animação
+quadro a quadro e só os blocos que mudam redesenhados. Na bancada, o botão OK (GPIO 2) troca de estado e o
+monitor serial aceita o número ou o nome. Os desenhos ficam em `rosto_faces.h`, em texto (`#`, `+`, `.`),
+e `firmware/rosto/teste/teste_faces.cpp` confere a tabela no computador, sem placa (`--ver` imprime os
+quadros). Depois de aprovado na tela, o desenho vira a tela ociosa do Bruce.
+
 ---
 
 ## Carcaça 3D
@@ -631,7 +637,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [ ] NFC (PN532) lendo tag
 - [ ] IR TX/RX
 - [ ] Áudio (speaker) + mic
-- [ ] Rosto animado na tela principal
+- [ ] Rosto animado na tela principal: sketch em `firmware/rosto/` compilado; falta testar na bancada e levar para o Bruce
 - [ ] Retro-Go rodando um jogo
 - [ ] Comprar o soquete DK920A-20M e medir a peça real (fenda, espessura aceita)
 - [ ] Projetar a PCB no EasyEDA (com carga/BMS/boost/card edge) e cotar na JLCPCB
