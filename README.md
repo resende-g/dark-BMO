@@ -123,7 +123,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | Selecionado; R$ 5,99; compra não confirmada; alimentação conforme datasheet/módulo (projeto prevê 5 V) |
 | Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | Selecionado; R$ 7,44; compra não confirmada; conferir dimensões e cavidade acústica |
 | Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | Selecionado; R$ 13,89; compra não confirmada; captação de voz |
-| ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. **Usar o slot SD do módulo da tela** (o MSP3218 costuma ter slot no verso, ligado direto em 3,3 V; conferir) ou, na PCB final, um slot próprio |
+| ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. **Usar o slot SD do módulo da tela**: o MSP3218 tem slot de **SD tamanho normal** no verso (confirmado em 02/11/2026), então o cartão microSD entra com o **adaptador microSD→SD**. Conferir se há chip buffer perto do slot (se houver, testar o SPI compartilhado). Na carcaça v0, o cartão fica atrás da tela, com troca rara. Na PCB final, slot microSD próprio na tampa traseira |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Se a bateria não tiver o terceiro fio, um NTC avulso serve: 10 kΩ (marcado "103"), constante B compatível com o datasheet do carregador (3435 ou 3950), colado na célula com fita kapton, sem criar ponto de pressão. O usuário já tem um sensor de temperatura: confirmar se é NTC analógico (serve) ou digital tipo DS18B20/DHT11 (não serve para o pino TS do carregador). Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
 | Botões tácteis | — | estoque próprio | Usuário informa que já possui vários botões; não comprar. Confirmar dimensões e quantidade na montagem (D-pad, 4 ações, select/start, 2 gatilhos de ombro, energia) |
@@ -154,7 +154,7 @@ bateria, analógicos), então só é modelada depois da Fase 2.
 
 | Fase | Comprar | Custo aproximado | O que destrava |
 |---|---|---:|---|
-| 1. Núcleo (hoje) | Só os jumpers Dupont (F-F, M-M, M-F) | R$ 15,79 (Choice) + imposto | Teste do CC1101 na S3 com o Bruce. Também sem compra: conferir o slot SD no verso da tela, ligar 1 MCP23017 nos botões e escrever o rosto do d-BMO. Firmware por meses |
+| 1. Núcleo (hoje) | Só os jumpers Dupont (F-F, M-M, M-F) | R$ 15,79 (Choice) + imposto | Teste do CC1101 na S3 com o Bruce. Também sem compra: ligar o slot SD da tela com o adaptador microSD→SD, ligar 1 MCP23017 nos botões e escrever o rosto do d-BMO. Firmware por meses |
 | 2. Volume | Bateria com PCM + NTC; tirar os analógicos do controle de PS3 (sem compra) | ~R$ 60 | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. A DevKitC não tem carregador: a v0 roda pela USB, ou com um módulo pronto de carga com power-path (que também serve para validar a energia na bancada, ver [Riscos da bateria](#riscos-da-bateria-e-recomendações)) |
 | 3. Periféricos | PN532, IR, MAX98357A, alto-falante, INMP441 | ~R$ 52 (buscar Choice) | NFC, IR e áudio, cada um no espaço já reservado na v0 |
 | 4. Cartuchos | Soquete card edge | ~R$ 15 | Cartucho no topo; até lá, a fenda fica com tampa cega |
@@ -609,7 +609,7 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [ ] Projetar a riser do card edge no topo
 - [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
 - [ ] Fase 1: comprar os jumpers Dupont (F-F, M-M, M-F)
-- [ ] Conferir o slot SD no verso do módulo da tela e ligar o microSD no CS 21
+- [ ] Ligar o slot SD da tela (cartão microSD com adaptador SD) no CS 21
 - [ ] Ligar 1 MCP23017 e passar os botões para ele (Bruce `interface.cpp`)
 - [ ] Validar a pinagem proposta da S3 e atualizar o `bmo.ini`
 - [ ] Fase 2: tirar e testar os analógicos do controle de PS3; comprar a bateria (PCM + NTC); modelar e imprimir a carcaça v0
