@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Licença: AGPL-3.0, a mesma do Bruce (ver firmware/bruce/LICENSE).
 # Compila (e, com "upload", grava) o Bruce para o BMO v1.
 # Uso: firmware/bruce/build.sh [pasta-do-clone-do-bruce] [upload]
 # Baixa o Bruce na versão fixada se a pasta ainda não existir e copia a placa do BMO para

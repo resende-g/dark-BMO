@@ -1,4 +1,4 @@
-// Rostos do d-BMO: os 10 estados da spec (resende-g/BMO, docs/brand/CHARACTER_SPECIFICATION.md).
+// Rostos do d-BMO: os 10 estados da spec (resende-g/d-BMO, docs/brand/CHARACTER_SPECIFICATION.md).
 // Grade fixa de 16 × 12 blocos (20 px cada na tela de 320 × 240). Um caractere por bloco:
 //   '#' vermelho sinal (#D92332)   '+' vermelho escuro (#8F1722)   '.' fundo (#090A0C)
 // Sem dependência do Arduino, para o teste_faces.cpp compilar no computador.

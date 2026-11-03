@@ -1,8 +1,8 @@
-# DBBS 1.0 — Dark-BMO Battery System
+# DBBS 1.0 — d-BMO-body Battery System
 
 > Status: especificação preliminar. Arquitetura funcional definida; componentes, pinagem final, dimensões e layout de PCB ainda dependem de validação.
 >
-> Escopo: subsistema de bateria da variante dark-BMO baseada em ESP32-P4 + ESP32-C6. Este documento não substitui nem altera a alimentação do BMO v1 legado baseado em ESP32-S3 descrito no README.
+> Escopo: subsistema de bateria da variante d-BMO-body baseada em ESP32-P4 + ESP32-C6. Este documento não substitui nem altera a alimentação do BMO v1 legado baseado em ESP32-S3 descrito no README.
 
 ## 1. Decisões consolidadas
 
