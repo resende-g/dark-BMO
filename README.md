@@ -118,11 +118,11 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | ~~Antena 2,4 GHz IPEX/U.FL~~ | 0 | — | **Não precisa com a S3**: a DevKitC e o WROOM-1 têm antena de trilha. Era exigência do módulo P4 (ver Decisões de projeto). Na carcaça, deixar a ponta da antena da S3 longe de metal, da bateria e do alto-falante. A antena SMA do CC1101 continua só para o CC1101 |
 | TFT 3,2" ILI9341 320×240 SPI | 1 | `3.2 ILI9341 320x240 SPI no touch` | Já comprada e validada (MSP3218 touch); pinos T_* sem ligação no v1. Tela única: rosto + menu + status |
 | CC1101 433 MHz + antena SMA | 1 | `CC1101 433MHz module SMA antenna` | Já chegou; falta testar na bancada (jumpers fêmea-fêmea) |
-| PN532 V3 NFC | 1 | `PN532 NFC module V3` | **No carrinho final de 02/11/2026** (compra a confirmar): "PN532 Set", R$ 17,20. DIP switch em I²C; endereço e compatibilidade a validar |
-| Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | **No carrinho final de 02/11/2026** (compra a confirmar): "1set", R$ 7,03. Conferir que o conjunto traz TX e RX |
-| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | **No carrinho final de 02/11/2026** (compra a confirmar): variação "Small Chip Welding" (chip BGA, pinos soldados), R$ 8,36. Alimentado direto da bateria (2,5–5,5 V); pino SD no GPIO 3 |
-| Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | **No carrinho final de 02/11/2026** (compra a confirmar): R$ 7,44. Conferir dimensões e cavidade acústica |
-| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | **No carrinho final de 02/11/2026** (compra a confirmar): R$ 12,14. Captação de voz |
+| PN532 V3 NFC | 1 | `PN532 NFC module V3` | **Comprado em 02/11/2026** (aguardando entrega): "PN532 Set", R$ 17,20. DIP switch em I²C; endereço e compatibilidade a validar |
+| Conjunto IR transmissor + receptor 38 kHz | 1 | `IR transmitter receiver 38kHz kit` | **Comprado em 02/11/2026** (aguardando entrega): "1set", R$ 7,03. Conferir que o conjunto traz TX e RX |
+| MAX98357A (amp I²S) | 1 | `MAX98357A I2S amplifier` | **Comprado em 02/11/2026** (aguardando entrega): variação "Small Chip Welding" (chip BGA, pinos soldados), R$ 8,36. Alimentado direto da bateria (2,5–5,5 V); pino SD no GPIO 3 |
+| Alto-falante 2030, 8 Ω 2 W | 1 | `2030 8 ohm 2W speaker` | **Comprado em 02/11/2026** (aguardando entrega): R$ 7,44. Conferir dimensões e cavidade acústica |
+| Mic INMP441 (I²S) | 1 | `INMP441 I2S microphone` | **Comprado em 02/11/2026** (aguardando entrega): R$ 12,14. Captação de voz |
 | ~~Módulo MicroSD SPI com conversor de nível~~ | 0 | — | **Removido em 02/11/2026.** Esses módulos baratos costumam manter o MISO ativo com o CS em alto e travam o SPI compartilhado com a tela e o CC1101. **Usar o slot SD do módulo da tela**: o MSP3218 tem slot de **SD tamanho normal** no verso (confirmado em 02/11/2026), então o cartão microSD entra com o **adaptador microSD→SD**. Conferir se há chip buffer perto do slot (se houver, testar o SPI compartilhado). Na carcaça v0, o cartão fica atrás da tela, com troca rara. Na PCB final, slot microSD próprio na tampa traseira |
 | Cartão microSD ADATA | 1 | já disponível | Usuário já possui; não comprar. Verificar capacidade e formatar FAT32 conforme necessidade |
 | Bateria LiPo 3,7V 1S 4000 mAh (anúncio) | 1 | `4070115 3.7V 4000mAh` | Selecionada; R$ 59,48; compra não confirmada. Dimensão informada: 0,4 × 70 × 115 mm (provavelmente 4,0 × 70 × 115 mm; confirmar medida real). **Requisitos:** PCM de proteção integrado, termistor NTC (3 fios) e vendedor com datasheet. **Conferir a polaridade do JST antes de ligar**: baterias do AliExpress vêm invertidas com frequência, e a inversão queima o carregador. Se a bateria não tiver o terceiro fio, um NTC avulso serve: 10 kΩ (marcado "103"), constante B compatível com o datasheet do carregador (3435 ou 3950), colado na célula com fita kapton, sem criar ponto de pressão. O usuário já tem um sensor de temperatura: confirmar se é NTC analógico (serve) ou digital tipo DS18B20/DHT11 (não serve para o pino TS do carregador). Ver [Riscos da bateria](#riscos-da-bateria-e-recomendações) |
@@ -130,10 +130,10 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 | Analógicos (sticks de PS3) | 2 | reaproveitar | **Tirar do controle genérico de PS3 que o usuário já tem** (sem compra). Cada stick tem 2 potenciômetros (X/Y) e o clique L3/R3. Ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados) |
 | Gatilhos de ombro (L/R) | 2–4 | estoque próprio | Botões tácteis em **ângulo reto**, como nos portáteis de emulação. Conferir se há modelos de ângulo reto no estoque; se não, comprar. Tampas: as do L1/R1 do controle de PS3 ou impressas em grafite; alavancas do L2/R2 se couberem (ver [Analógicos e gatilhos reaproveitados](#analógicos-e-gatilhos-reaproveitados)) |
 | Botão momentâneo de energia | 1 | `tactile momentary push button` | Usar botão, não chave deslizante. A PCB precisará de circuito de power-latch/gerenciamento de energia para ligar e desligar com pressão; definir CI/topologia e botão conforme esquema. Não comprar chave SPST |
-| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | **No carrinho final de 02/11/2026** (compra a confirmar): kit de filme metálico 1%, 30 valores (10 Ω–1 MΩ), 300 peças, R$ 19,96. Pull-ups do I²C, divisor da bateria e afins |
-| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | **No carrinho final de 02/11/2026** (compra a confirmar): pacote de 100 peças de 100 nF (104), R$ 12,24. Desacoplamento do MCP23017 e dos módulos |
-| Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | **No carrinho final de 02/11/2026** (compra a confirmar): variação "20cm 3kinds 120pin" (40 de cada tipo), R$ 22,10. Prioridade imediata: F-F para o CC1101 |
-| Protoboard MB-102 (830 pontos) | 1 | `MB-102 breadboard 830` | **No carrinho final de 02/11/2026** (compra a confirmar): variação "MB-102 white", R$ 13,26. A DevKitC-1 é larga e deixa só uma fileira livre de cada lado; se precisar, usar duas lado a lado |
+| Resistores 4,7k / 100k / 1k | kit | `resistor kit 4.7k 100k 1k` | **Comprado em 02/11/2026** (aguardando entrega): kit de filme metálico 1%, 30 valores (10 Ω–1 MΩ), 300 peças, R$ 19,96. Pull-ups do I²C, divisor da bateria e afins |
+| Capacitores 100nF (104) | ~5 | `100nF ceramic capacitor 104` | **Comprado em 02/11/2026** (aguardando entrega): pacote de 100 peças de 100 nF (104), R$ 12,24. Desacoplamento do MCP23017 e dos módulos |
+| Jumpers Dupont (F-F, M-M e M-F) | kit 40 peças | `Dupont jumper wire kit 40pcs female-female male-male male-female` | **Comprado em 02/11/2026** (aguardando entrega): variação "20cm 3kinds 120pin" (40 de cada tipo), R$ 22,10. Prioridade imediata: F-F para o CC1101 |
+| Protoboard MB-102 (830 pontos) | 1 | `MB-102 breadboard 830` | **Comprado em 02/11/2026** (aguardando entrega): variação "MB-102 white", R$ 13,26. A DevKitC-1 é larga e deixa só uma fileira livre de cada lado; se precisar, usar duas lado a lado |
 | Malha dessoldadora (2–3 mm) e fluxo no-clean | 1 cada | loja brasileira | Para tirar os analógicos do controle de PS3 e para a montagem. Fluxo no-clean em pasta ou caneta, nunca pasta ácida |
 | Adaptador microSD→SD | 1 | loja de informática | Se não veio com o cartão: o slot da tela é SD tamanho normal |
 | Fio fino 30 AWG | 1 rolo | `30 AWG silicone wire` | Comprar no Brasil: no AliExpress (carrinho de 02/11), o frete era R$ 83,04 para R$ 5,01 de fio. Fiação fina e protótipos |
@@ -141,7 +141,7 @@ digitar comando faz sentido. Fora do escopo deste repositório por enquanto.
 
 
 
-**Carrinho final de 02/11/2026, já com a S3 (compra a confirmar):** jumpers R$ 22,10; protoboard MB-102 R$ 13,26; PN532 R$ 17,20; IR R$ 7,03; MAX98357A R$ 8,36; alto-falante R$ 7,44; INMP441 R$ 12,14; resistores R$ 19,96; capacitores 100 nF R$ 12,24. **Total R$ 119,73**, antes do cupom de R$ 16 (se valer para o carrinho inteiro) e do imposto. Saíram a placa P4, a antena IPEX, o módulo microSD SPI e o fio de 30 AWG. Malha, fluxo e adaptador microSD→SD em loja brasileira.
+**Comprado em 02/11/2026, já com a S3 (aguardando entrega):** jumpers R$ 22,10; protoboard MB-102 R$ 13,26; PN532 R$ 17,20; IR R$ 7,03; MAX98357A R$ 8,36; alto-falante R$ 7,44; INMP441 R$ 12,14; resistores R$ 19,96; capacitores 100 nF R$ 12,24. **Total R$ 119,73**, antes do cupom de R$ 16 (se valer para o carrinho inteiro) e do imposto. Saíram a placa P4, a antena IPEX, o módulo microSD SPI e o fio de 30 AWG. Malha, fluxo e adaptador microSD→SD em loja brasileira.
 
 Histórico — **Carrinho revisado em 02/11/2026** (antes da volta para a S3; a placa P4 saiu do carrinho): placa P4+C6 R$ 116,91; PN532 V3 R$ 17,20; conjunto IR R$ 7,03; alto-falante R$ 7,44; jumpers R$ 15,79; card edge R$ 14,33 (todos Choice, frete grátis); MAX98357A R$ 5,99; INMP441 R$ 13,89; módulo microSD R$ 4,11 e fio 30 AWG 3 × R$ 1,67 (fora do Choice). Os quatro itens fora do Choice somavam **R$ 177,91 de frete para R$ 29,10 em peças**, e o resumo não mostrava imposto nem ICMS. Decisões: o módulo microSD e o fio saem do carrinho; o MAX98357A e o INMP441 voltam depois em versão Choice; a bateria e os analógicos ainda não estão no carrinho. A compra foi dividida em fases (ver [Compras em fases](#compras-em-fases)). O usuário já possui cartão microSD ADATA e botões; não comprar. Não comprar chave SPST: será usado botão momentâneo com circuito de power-latch na PCB. Resistores e capacitores avulsos só servem para bancada: na PCB, entram como SMD montados pela JLCPCB.
 
@@ -159,9 +159,9 @@ bateria, analógicos), então só é modelada depois da Fase 2.
 
 | Fase | Comprar | Custo aproximado | O que destrava |
 |---|---|---:|---|
-| 1. Núcleo + periféricos (carrinho de 02/11/2026) | Jumpers, protoboard, resistores, capacitores 100 nF, PN532, IR, MAX98357A, alto-falante, INMP441 | R$ 119,73 antes do cupom e do imposto | CC1101, NFC, IR e áudio na S3 com o Bruce. Sem compra: slot SD da tela com adaptador, 1 MCP23017 nos botões, rosto do d-BMO. A Fase 3 original foi antecipada para cá, com o dinheiro que sobrou sem a P4 |
+| 1. Núcleo + periféricos (comprada em 02/11/2026) | Jumpers, protoboard, resistores, capacitores 100 nF, PN532, IR, MAX98357A, alto-falante, INMP441 | R$ 119,73 antes do cupom e do imposto | CC1101, NFC, IR e áudio na S3 com o Bruce. Sem compra: slot SD da tela com adaptador, 1 MCP23017 nos botões, rosto do d-BMO. A Fase 3 original foi antecipada para cá, com o dinheiro que sobrou sem a P4 |
 | 2. Volume + energia (próxima rodada) | Bateria com PCM + NTC **e** módulo de carga com power-path (BQ24074 ou MCP73871) na mesma compra; botões tácteis de ângulo reto se faltarem no estoque; tirar os analógicos do controle de PS3 (sem compra) | ~R$ 80–100 | Peças que definem o corpo em mãos: **modelar e imprimir a carcaça v0**. Bateria sem carregador adequado não se compra: os dois vão juntos. O módulo também valida a energia na bancada (ver [Riscos da bateria](#riscos-da-bateria-e-recomendações)) |
-| 3. Periféricos | — | — | Antecipada para a Fase 1 (carrinho de 02/11/2026) |
+| 3. Periféricos | — | — | Antecipada para a Fase 1 (comprada em 02/11/2026) |
 | 4. Cartuchos | Soquete card edge | ~R$ 15 | Cartucho no topo; até lá, a fenda fica com tampa cega |
 | 5. Definitivo | PCB própria na JLCPCB (ESP32-S3-WROOM-1-N16R8, carga/BMS/regulador SMD, MCP23017, riser do card edge) | ~R$ 100 por 5 placas + montagem, frete e imposto | Carcaça v1 em volta da PCB definitiva |
 
@@ -613,7 +613,8 @@ Casada com o soquete **DK920A-20M** e com as regras de contatos dourados da JLCP
 - [x] Fechar entrada: D-pad + botões + dois analógicos (sticks de PS3 no ADC)
 - [ ] Projetar a riser do card edge no topo
 - [x] Bancada anterior: ESP32-S3 DevKitC confirmada (16 MB + 8 MB PSRAM), tela ILI9341 validada (ID 0x9341) e Bruce rodando com 3 botões
-- [ ] Fase 1 + periféricos: confirmar a compra do carrinho de 02/11/2026 (R$ 119,73) e comprar malha, fluxo e adaptador microSD→SD no Brasil
+- [x] Fase 1 + periféricos comprada no AliExpress em 02/11/2026 (R$ 119,73 antes do cupom e do imposto)
+- [ ] Comprar malha, fluxo e adaptador microSD→SD no Brasil
 - [ ] Próxima rodada: bateria com PCM + NTC e módulo de carga com power-path, juntos
 - [ ] Ligar o slot SD da tela (cartão microSD com adaptador SD) no CS 21
 - [ ] Ligar 1 MCP23017 e passar os botões para ele (Bruce `interface.cpp`)
