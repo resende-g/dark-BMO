@@ -27,6 +27,14 @@ O visual segue a identidade do d-BMO, definida em
 videogame portátil de emulação vertical, corpo prata, rosto em pixels vermelhos na tela,
 dois analógicos e nenhum membro (ver [Aviso legal](#aviso-legal)).
 
+**Relação com o assistente d-BMO.** O d-BMO também é um assistente de IA pessoal, local-first,
+documentado em [`resende-g/BMO`](https://github.com/resende-g/BMO). Este aparelho é o **corpo
+físico** dele: no [modo agente](#firmware), ele se conecta ao BMO Brain como cliente autenticado,
+pela rede privada, e usa a tela, o alto-falante e o microfone. As regras da integração estão na
+[seção 4.11 da arquitetura do BMO](https://github.com/resende-g/BMO/blob/main/ARCHITECTURE.md):
+o aparelho não acessa a memória pessoal (BMO Heart) e o Brain **não aciona** as ferramentas de RF,
+NFC e IR do Bruce remotamente.
+
 É um projeto de aprendizado. O objetivo é tanto a ferramenta quanto o processo de montar,
 soldar, entender barramentos e escrever firmware.
 
@@ -228,7 +236,7 @@ Um firmware por vez (como "cartuchos de software"):
 | **Bruce** (C++) | multitool pronto (RF, NFC, IR, WiFi/BLE). Base do projeto. Build próprio do d-BMO (versão 1.16.1, tela ILI9341 + 3 botões + CC1101) em `firmware/bruce/`: o binário oficial da DevKitC não tem tela |
 | **MicroPython** | escrever Python e testar cada módulo; interativo, ótimo pra aprender |
 | **Retro-Go** | jogos retrô. Roda bem NES, GB, GBC, Master System, Game Gear, PC Engine. SNES/Mega Drive lento/parcial. GBA não |
-| **Modo agente** (futuro) | d-BMO como corpo remoto de um agente de IA via WiFi/BLE (WebSocket), usando speaker/mic/tela. Só firmware, sem hardware novo |
+| **Modo agente** (futuro) | Corpo remoto do assistente d-BMO ([`resende-g/BMO`](https://github.com/resende-g/BMO)): cliente autenticado da API local do BMO Brain pela rede privada (WiFi + NetBird), usando speaker, mic e tela; o rosto mostra o estado do Brain. Só firmware, sem hardware novo. RF, NFC e IR ficam fora do alcance do agente |
 
 No Bruce, a leitura dos 3 botões já está em `firmware/bruce/interface.cpp`. Falta o D-pad
 completo e o input do emulador.
