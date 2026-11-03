@@ -1,9 +1,9 @@
 # d-BMO-body — hardware do d-BMO
 
 <p align="center">
-  <img src="docs/img/dbmo-referencia-conceitual-v1.jpeg" alt="Referência conceitual do d-BMO: videogame portátil vertical prata, tela 4:3 com rosto em pixels vermelhos, D-pad e botões grafite, dois analógicos, apoiado num suporte inclinado" width="320">
+  <img src="docs/img/dbmo-body-render-v1.jpg" alt="Render do d-BMO-body: videogame portátil vertical prata com tela 4:3 e rosto em pixels vermelhos, D-pad e quatro botões de ação grafite lisos, dois analógicos, grade de alto-falante, cartucho encaixado no topo, antena SMA e LED de IR" width="360">
   <br>
-  <sub>Referência conceitual do personagem (gerada por IA, não é arte final). O corpo do hardware será desenhado a partir dela.</sub>
+  <sub>Render conceitual do corpo (gerado por IA, não é arte final nem desenho cotado). As medidas reais saem do CAD.</sub>
 </p>
 
 > Multitool portátil DIY de estudo de segurança da informação, estilo Flipper Zero, caseiro.
