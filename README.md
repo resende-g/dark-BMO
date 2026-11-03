@@ -511,26 +511,24 @@ os cartuchos possíveis:
 - **Cartuchos temáticos**: cada cartucho como uma "ferramenta" ou "jogo" físico, no espírito dos
   cartuchos de videogame.
 
-**Referências visuais (família de cartuchos):** carcaça grafite com detalhes prata e a mesma
-borda de contatos dourados. As imagens abaixo ainda são do visual antigo (teal) e serão
-geradas de novo; cada cartucho é uma "capa de jogo" em pixel art, com um nome que funciona como
-título de jogo antigo e codifica a função (sem logo de marca). Prompts em
+**Referências visuais (família de cartuchos):** carcaça prata impressa em 3D e a mesma borda de
+contatos dourados; cada cartucho é uma "capa de jogo" em pixel art, com um título de jogo antigo
+inspirado em distopias clássicas da literatura, que codifica a função (sem logo de marca). Prompts em
 [docs/cartuchos-prompts.md](docs/cartuchos-prompts.md).
 
-| WAVE RIDER — cartucho LoRa 915 MHz (antena de mola) | EAGLE EYE — cartucho câmera (lente frontal, visão p/ o modo agente) |
+| BRAVE NEW WORLD — cartucho LoRa 915 MHz (antena de mola) | BIG BROTHER — cartucho câmera (lente frontal, visão p/ o modo agente) |
 |---|---|
-| ![Cartucho WAVE RIDER](docs/img/cartucho-wave-rider.jpg) | ![Cartucho EAGLE EYE](docs/img/cartucho-eagle-eye.jpg) |
+| ![Cartucho BRAVE NEW WORLD](docs/img/cartucho-brave-new-world.jpg) | ![Cartucho BIG BROTHER](docs/img/cartucho-big-brother.jpg) |
 
 Servem de referência do card edge para o projeto no EasyEDA e para o CAD. Com o soquete
 DK920A-20M (2×10), os **contatos ficam nos dois lados** da língua (10 na frente, 10 atrás),
-como numa placa de memória. O cartucho câmera (EAGLE EYE) tem a lente na face frontal: o módulo (ex. OV2640) fica
+como numa placa de memória. O cartucho câmera (BIG BROTHER) tem a lente na face frontal: o módulo (ex. OV2640) fica
 virado para fora, no lado oposto aos contatos, e a carcaça do cartucho precisa de um furo para
 a lente.
 
-Nota técnica do LoRa: a etiqueta da imagem diz 433 MHz, mas no Brasil o LoRa opera na faixa ISM
-de **915 MHz** (Anatel: 902-907,5 e 915-928). 433 MHz é a faixa do CC1101 comum. Ajustar para
-915 se/quando o cartucho LoRa for feito de verdade. "LoRa" é marca da Semtech (uso conceitual
-apenas, não comercial).
+Nota técnica do LoRa: a etiqueta diz 915 MHz porque, no Brasil, o LoRa opera na faixa ISM de
+**915 MHz** (Anatel: 902-907,5 e 915-928). 433 MHz é a faixa do CC1101 comum. "LoRa" é marca da
+Semtech (uso conceitual apenas, não comercial).
 
 Limite honesto: o card edge não torna o d-BMO mais rápido nem roda IA local; para um "cérebro
 extra" o cartucho precisaria do próprio processador (outro projeto). O uso mais valioso para o
